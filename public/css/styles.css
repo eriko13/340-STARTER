@@ -135,13 +135,14 @@ main h2 {
 }
 
 .car-details {
-  position: relative;
-  top: auto;
-  left: auto;
-  background-color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 1rem;
   max-width: 100%;
   color: var(--dark-color);
+  z-index: 1;
 }
 
 .car-details h3 {
@@ -186,6 +187,7 @@ main h2 {
 .reviews {
   width: 100%;
   margin-bottom: 2rem;
+  order: 1;
 }
 
 .reviews h3 {
@@ -212,6 +214,7 @@ main h2 {
 /* Upgrades Section */
 .upgrades {
   width: 100%;
+  order: 2;
 }
 
 .upgrades h3 {
@@ -292,6 +295,7 @@ footer {
   .reviews, .upgrades {
     width: 48%;
     margin-bottom: 0;
+    order: initial;
   }
   
   .upgrades-container {
