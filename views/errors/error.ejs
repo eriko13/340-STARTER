@@ -1,0 +1,113 @@
+<% if(title){ %>
+<h1><%= title %></h1>
+<% } else { %>
+<h1>Oops! Something Went Wrong</h1>
+<% } %>
+
+<div class="error-container">
+  <div class="error-content">
+    <div class="error-icon">🚗💨</div>
+    <h2>Our servers just took an unexpected detour!</h2>
+    
+    <div class="error-message">
+      <p><strong>Error Details:</strong></p>
+      <div class="message-box">
+        <%- message %>
+      </div>
+    </div>
+
+    <div class="error-humor">
+      <p>Don't worry, our mechanics are already under the hood trying to fix this issue. 
+         In the meantime, why not check out our amazing selection of vehicles?</p>
+      
+      <div class="error-suggestions">
+        <h3>While you wait, you could:</h3>
+        <ul>
+          <li>🏠 <a href="/">Return to our homepage</a></li>
+          <li>🚗 <a href="/inv">Browse our inventory</a></li>
+          <li>☕ Grab a coffee and try again in a few minutes</li>
+          <li>🎵 Listen to some Back to the Future soundtrack</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="error-quote">
+      <blockquote>
+        <p>"Roads? Where we're going, we don't need roads... but we do need working servers!"</p>
+        <cite>- Doc Brown (probably)</cite>
+      </blockquote>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-content h2 {
+  color: #d32f2f;
+  margin-bottom: 1.5rem;
+}
+
+.message-box {
+  background-color: #f5f5f5;
+  border-left: 4px solid #d32f2f;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: left;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.error-humor {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+}
+
+.error-suggestions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.error-suggestions li {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+
+.error-suggestions a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.error-suggestions a:hover {
+  text-decoration: underline;
+}
+
+.error-quote {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  font-style: italic;
+}
+
+.error-quote cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+</style> 
