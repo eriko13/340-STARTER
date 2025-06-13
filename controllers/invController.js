@@ -117,15 +117,47 @@ invCont.addInventory = async function (req, res) {
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
-  const data = await invModel.getInventoryByClassificationId(classification_id)
-  const grid = await utilities.buildClassificationGrid(data)
-  let nav = await utilities.getNav()
-  const className = data[0].classification_name
-  res.render("./inventory/classification", {
-    title: className + " vehicles",
-    nav,
-    grid,
-  })
+  
+  // Validate classification_id is a valid number
+  if (!classification_id || isNaN(classification_id)) {
+    req.flash("notice", "Invalid classification ID.")
+    return res.redirect("/")
+  }
+  
+  try {
+    const data = await invModel.getInventoryByClassificationId(classification_id)
+    const grid = await utilities.buildClassificationGrid(data)
+    let nav = await utilities.getNav()
+    
+    let className = "Unknown Classification"
+    
+    if (data && data.length > 0) {
+      // If there are vehicles, get classification name from the first vehicle's data
+      className = data[0].classification_name
+    } else {
+      // If no vehicles, get classification name from the classifications table
+      const classifications = await invModel.getClassifications()
+      const classification = classifications.rows.find(c => c.classification_id == classification_id)
+      if (classification) {
+        className = classification.classification_name
+      } else {
+        // Classification doesn't exist, handle error
+        req.flash("notice", "Sorry, the requested classification was not found.")
+        return res.redirect("/")
+      }
+    }
+    
+    res.render("./inventory/classification", {
+      title: className + " vehicles",
+      nav,
+      grid,
+    })
+  } catch (error) {
+    // Error getting inventory or classification data
+    console.error("Error in buildByClassificationId:", error)
+    req.flash("notice", "Sorry, there was an error loading the classification.")
+    res.redirect("/")
+  }
 }
 
 module.exports = invCont 

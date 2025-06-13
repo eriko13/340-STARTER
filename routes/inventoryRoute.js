@@ -29,6 +29,6 @@ router.post("/add-inventory",
 );
 
 // Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId);
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
 module.exports = router; 
