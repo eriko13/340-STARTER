@@ -1,0 +1,81 @@
+<% if(title){ %>
+<h1><%= title %></h1>
+<% } else {res.redirect('/')} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <div id="errors">
+    <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<div class="form-container">
+  <p>Add a new classification to the inventory. Classification names cannot contain spaces or special characters.</p>
+  
+  <form id="add-classification-form" method="post" action="/inv/add-classification">
+    <fieldset>
+      <legend>Add New Classification</legend>
+      
+      <div class="form-group">
+        <label for="classification_name">Classification Name:</label>
+        <input 
+          type="text" 
+          id="classification_name" 
+          name="classification_name" 
+          required
+          pattern="^[A-Za-z0-9]+$"
+          title="Only letters and numbers allowed, no spaces or special characters"
+          value="<%= locals.classification_name || '' %>"
+        >
+        <span class="validation-message" id="name-validation"></span>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn">Add Classification</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<script>
+  // Client-side validation
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('add-classification-form');
+    const nameInput = document.getElementById('classification_name');
+    const validationMessage = document.getElementById('name-validation');
+    
+    function validateName() {
+      const value = nameInput.value.trim();
+      const pattern = /^[A-Za-z0-9]+$/;
+      
+      if (value === '') {
+        validationMessage.textContent = 'Classification name is required';
+        validationMessage.className = 'validation-message error';
+        return false;
+      } else if (!pattern.test(value)) {
+        validationMessage.textContent = 'Only letters and numbers allowed, no spaces or special characters';
+        validationMessage.className = 'validation-message error';
+        return false;
+      } else {
+        validationMessage.textContent = 'Valid classification name';
+        validationMessage.className = 'validation-message success';
+        return true;
+      }
+    }
+    
+    nameInput.addEventListener('input', validateName);
+    nameInput.addEventListener('blur', validateName);
+    
+    form.addEventListener('submit', function(e) {
+      if (!validateName()) {
+        e.preventDefault();
+        nameInput.focus();
+      }
+    });
+  });
+</script> 

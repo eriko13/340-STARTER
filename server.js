@@ -8,11 +8,35 @@
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
+const session = require("express-session")
+const flash = require("connect-flash")
 const app = express()
 const static = require("./routes/static")
 const baseRoute = require("./routes/base")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
+
+/* ***********************
+ * Middleware
+ *************************/
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  name: 'sessionId',
+}))
+
+// Flash Messages Middleware
+app.use(flash())
+
+// Make flash messages available to all views
+app.use((req, res, next) => {
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+})
+
+// Parse URL-encoded form data
+app.use(express.urlencoded({ extended: true }))
 
 /* ***********************
  * View Engine and Templates

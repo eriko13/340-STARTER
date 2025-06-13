@@ -1,0 +1,288 @@
+<% if(title){ %>
+<h1><%= title %></h1>
+<% } else {res.redirect('/')} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <div id="errors">
+    <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<div class="form-container">
+  <p>Add a new vehicle to the inventory. All fields are required.</p>
+  
+  <form id="add-inventory-form" method="post" action="/inv/add-inventory">
+    <fieldset>
+      <legend>Vehicle Information</legend>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inv_make">Make:</label>
+          <input 
+            type="text" 
+            id="inv_make" 
+            name="inv_make" 
+            required
+            minlength="3"
+            pattern="^[A-Za-z\s\-]+$"
+            title="Vehicle make (letters, spaces, and hyphens only)"
+            value="<%= locals.inv_make || '' %>"
+          >
+          <span class="validation-message" id="make-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="inv_model">Model:</label>
+          <input 
+            type="text" 
+            id="inv_model" 
+            name="inv_model" 
+            required
+            minlength="1"
+            value="<%= locals.inv_model || '' %>"
+          >
+          <span class="validation-message" id="model-validation"></span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inv_year">Year:</label>
+          <input 
+            type="text" 
+            id="inv_year" 
+            name="inv_year" 
+            required
+            pattern="^(19|20)\d{2}$"
+            title="4-digit year (1900-2099)"
+            maxlength="4"
+            value="<%= locals.inv_year || '' %>"
+          >
+          <span class="validation-message" id="year-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="inv_color">Color:</label>
+          <input 
+            type="text" 
+            id="inv_color" 
+            name="inv_color" 
+            required
+            pattern="^[A-Za-z\s]+$"
+            title="Color name (letters and spaces only)"
+            value="<%= locals.inv_color || '' %>"
+          >
+          <span class="validation-message" id="color-validation"></span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inv_price">Price:</label>
+          <input 
+            type="number" 
+            id="inv_price" 
+            name="inv_price" 
+            required
+            min="0"
+            step="1"
+            value="<%= locals.inv_price || '' %>"
+          >
+          <span class="validation-message" id="price-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="inv_miles">Mileage:</label>
+          <input 
+            type="number" 
+            id="inv_miles" 
+            name="inv_miles" 
+            required
+            min="0"
+            step="1"
+            value="<%= locals.inv_miles || '' %>"
+          >
+          <span class="validation-message" id="miles-validation"></span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="classification_id">Classification:</label>
+        <%- classificationList %>
+        <span class="validation-message" id="classification-validation"></span>
+      </div>
+      
+      <div class="form-group">
+        <label for="inv_description">Description:</label>
+        <textarea 
+          id="inv_description" 
+          name="inv_description" 
+          required
+          minlength="1"
+          rows="4"
+          cols="50"
+          placeholder="Enter a detailed description of the vehicle..."
+        ><%= locals.inv_description || '' %></textarea>
+        <span class="validation-message" id="description-validation"></span>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inv_image">Image Path:</label>
+          <input 
+            type="text" 
+            id="inv_image" 
+            name="inv_image" 
+            required
+            value="<%= locals.inv_image || '/images/vehicles/no-image.png' %>"
+          >
+          <span class="validation-message" id="image-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="inv_thumbnail">Thumbnail Path:</label>
+          <input 
+            type="text" 
+            id="inv_thumbnail" 
+            name="inv_thumbnail" 
+            required
+            value="<%= locals.inv_thumbnail || '/images/vehicles/no-image-tn.png' %>"
+          >
+          <span class="validation-message" id="thumbnail-validation"></span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn">Add Vehicle</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<script>
+  // Client-side validation
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('add-inventory-form');
+    const inputs = {
+      make: document.getElementById('inv_make'),
+      model: document.getElementById('inv_model'),
+      year: document.getElementById('inv_year'),
+      color: document.getElementById('inv_color'),
+      price: document.getElementById('inv_price'),
+      miles: document.getElementById('inv_miles'),
+      classification: document.getElementById('classificationList'),
+      description: document.getElementById('inv_description'),
+      image: document.getElementById('inv_image'),
+      thumbnail: document.getElementById('inv_thumbnail')
+    };
+    
+    const validationMessages = {
+      make: document.getElementById('make-validation'),
+      model: document.getElementById('model-validation'),
+      year: document.getElementById('year-validation'),
+      color: document.getElementById('color-validation'),
+      price: document.getElementById('price-validation'),
+      miles: document.getElementById('miles-validation'),
+      classification: document.getElementById('classification-validation'),
+      description: document.getElementById('description-validation'),
+      image: document.getElementById('image-validation'),
+      thumbnail: document.getElementById('thumbnail-validation')
+    };
+    
+    function validateField(field, value, validationRules) {
+      const message = validationMessages[field];
+      
+      for (let rule of validationRules) {
+        if (!rule.test(value)) {
+          message.textContent = rule.message;
+          message.className = 'validation-message error';
+          return false;
+        }
+      }
+      
+      message.textContent = 'Valid';
+      message.className = 'validation-message success';
+      return true;
+    }
+    
+    const validationRules = {
+      make: [
+        { test: (v) => v.trim() !== '', message: 'Make is required' },
+        { test: (v) => v.length >= 3, message: 'Make must be at least 3 characters' },
+        { test: (v) => /^[A-Za-z\s\-]+$/.test(v), message: 'Make can only contain letters, spaces, and hyphens' }
+      ],
+      model: [
+        { test: (v) => v.trim() !== '', message: 'Model is required' },
+        { test: (v) => v.length >= 1, message: 'Model must be at least 1 character' }
+      ],
+      year: [
+        { test: (v) => v.trim() !== '', message: 'Year is required' },
+        { test: (v) => /^(19|20)\d{2}$/.test(v), message: 'Year must be a 4-digit year (1900-2099)' }
+      ],
+      color: [
+        { test: (v) => v.trim() !== '', message: 'Color is required' },
+        { test: (v) => /^[A-Za-z\s]+$/.test(v), message: 'Color can only contain letters and spaces' }
+      ],
+      price: [
+        { test: (v) => v.trim() !== '', message: 'Price is required' },
+        { test: (v) => !isNaN(v) && parseFloat(v) >= 0, message: 'Price must be a positive number' }
+      ],
+      miles: [
+        { test: (v) => v.trim() !== '', message: 'Mileage is required' },
+        { test: (v) => !isNaN(v) && parseInt(v) >= 0, message: 'Mileage must be a positive number' }
+      ],
+      classification: [
+        { test: (v) => v !== '', message: 'Please select a classification' }
+      ],
+      description: [
+        { test: (v) => v.trim() !== '', message: 'Description is required' },
+        { test: (v) => v.trim().length >= 1, message: 'Description must be at least 1 character' }
+      ],
+      image: [
+        { test: (v) => v.trim() !== '', message: 'Image path is required' }
+      ],
+      thumbnail: [
+        { test: (v) => v.trim() !== '', message: 'Thumbnail path is required' }
+      ]
+    };
+    
+    // Add event listeners for real-time validation
+    Object.keys(inputs).forEach(field => {
+      const input = inputs[field];
+      if (input) {
+        input.addEventListener('input', () => validateField(field, input.value, validationRules[field]));
+        input.addEventListener('blur', () => validateField(field, input.value, validationRules[field]));
+      }
+    });
+    
+    // Form submission validation
+    form.addEventListener('submit', function(e) {
+      let isValid = true;
+      
+      Object.keys(inputs).forEach(field => {
+        const input = inputs[field];
+        if (input && !validateField(field, input.value, validationRules[field])) {
+          isValid = false;
+        }
+      });
+      
+      if (!isValid) {
+        e.preventDefault();
+        // Focus on first invalid field
+        Object.keys(inputs).forEach(field => {
+          const message = validationMessages[field];
+          if (message && message.className.includes('error')) {
+            inputs[field].focus();
+            return false;
+          }
+        });
+      }
+    });
+  });
+</script> 
