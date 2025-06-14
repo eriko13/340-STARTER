@@ -8,6 +8,9 @@ const utilities = require("../utilities/")
 // Route to build login view
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
 
+// Route to build registration view
+router.get("/register", utilities.handleErrors(accountController.buildRegister))
+
 // Route to handle login attempt
 router.post(
   "/login", 
@@ -16,6 +19,9 @@ router.post(
   utilities.handleErrors(accountController.accountLogin),
   utilities.checkJWTToken,
 )
+
+// Route to handle registration
+router.post('/register', utilities.handleErrors(accountController.registerAccount))
 
 // Route to build account management view (protected)
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
