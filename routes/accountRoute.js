@@ -1,6 +1,6 @@
 // Needed Resources 
 const express = require("express")
-const router = new express.Router() 
+const router = new express.Router()
 const accountController = require("../controllers/accountController")
 const accountValidate = require("../utilities/account-validation")
 const utilities = require("../utilities/")
@@ -9,7 +9,13 @@ const utilities = require("../utilities/")
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
 
 // Route to handle login attempt
-router.post("/login", utilities.handleErrors(accountController.accountLogin))
+router.post(
+  "/login", 
+  accountValidate.loginRules(),
+  accountValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin),
+  utilities.checkJWTToken,
+)
 
 // Route to build account management view (protected)
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
@@ -18,7 +24,7 @@ router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.b
 router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(accountController.buildUpdateAccount))
 
 // Route to process account information update (protected)
-router.post("/update-info/", 
+router.post("/update-info/",
   utilities.checkLogin,
   accountValidate.updateAccountRules(),
   accountValidate.checkUpdateData,
@@ -26,7 +32,7 @@ router.post("/update-info/",
 )
 
 // Route to process password change (protected)
-router.post("/update-password/", 
+router.post("/update-password/",
   utilities.checkLogin,
   accountValidate.updatePasswordRules(),
   accountValidate.checkPasswordData,

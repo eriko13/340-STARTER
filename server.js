@@ -17,7 +17,7 @@ const static = require("./routes/static")
 const baseRoute = require("./routes/base")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
-const utilities = require("./utilities")
+const utilities = require("./utilities/")
 
 /* ***********************
  * Middleware

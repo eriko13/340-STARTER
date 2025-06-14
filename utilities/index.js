@@ -91,14 +91,13 @@ Util.checkJWTToken = (req, res, next) => {
       process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret',
       function (err, accountData) {
         if (err) {
+          req.flash("notice", "Please log in.")
           res.clearCookie("jwt")
-          res.locals.loggedin = 0
-          next()
-        } else {
-          res.locals.accountData = accountData
-          res.locals.loggedin = 1
-          next()
+          return res.redirect("/account/login")
         }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
       })
   } else {
     res.locals.loggedin = 0

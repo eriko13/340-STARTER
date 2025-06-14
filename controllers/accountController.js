@@ -36,17 +36,17 @@ accountController.buildAccount = async function (req, res, next) {
 accountController.buildUpdateAccount = async function (req, res, next) {
   const account_id = parseInt(req.params.account_id)
   let nav = await utilities.getNav()
-  
+
   // Verify that the user is updating their own account
   if (res.locals.accountData.account_id !== account_id) {
     req.flash("notice", "Access denied. You can only update your own account.")
     return res.redirect("/account/")
   }
-  
+
   try {
     // Get fresh account data from database
     const accountData = await accountModel.getAccountById(account_id)
-    
+
     if (accountData) {
       res.render("account/update-account", {
         title: "Update Account Information",
@@ -73,26 +73,26 @@ accountController.buildUpdateAccount = async function (req, res, next) {
 accountController.updateAccountInfo = async function (req, res) {
   let nav = await utilities.getNav()
   const { account_firstname, account_lastname, account_email, account_id } = req.body
-  
+
   // Verify that the user is updating their own account
   if (res.locals.accountData.account_id !== parseInt(account_id)) {
     req.flash("notice", "Access denied. You can only update your own account.")
     return res.redirect("/account/")
   }
-  
+
   try {
     // Update account information in database
     const updateResult = await accountModel.updateAccount(
-      account_firstname, 
-      account_lastname, 
-      account_email, 
+      account_firstname,
+      account_lastname,
+      account_email,
       account_id
     )
-    
+
     if (updateResult && !updateResult.message) {
       // Success - get updated account data
       const updatedAccountData = await accountModel.getAccountById(account_id)
-      
+
       if (updatedAccountData) {
         // Update JWT token with new account data
         const newAccountData = {
@@ -102,20 +102,20 @@ accountController.updateAccountInfo = async function (req, res) {
           account_email: updatedAccountData.account_email,
           account_type: updatedAccountData.account_type
         }
-        
+
         const accessToken = jwt.sign(
           newAccountData,
           process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret',
           { expiresIn: 3600 * 1000 }
         )
-        
+
         // Update cookie with new JWT token
-        if(process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development') {
           res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
         } else {
           res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
         }
-        
+
         req.flash("notice", "Account information has been updated successfully.")
       } else {
         req.flash("notice", "Account updated but there was an error retrieving the updated information.")
@@ -126,7 +126,7 @@ accountController.updateAccountInfo = async function (req, res) {
   } catch (error) {
     req.flash("notice", "Sorry, there was an error updating your account.")
   }
-  
+
   res.redirect("/account/")
 }
 
@@ -136,13 +136,13 @@ accountController.updateAccountInfo = async function (req, res) {
 accountController.updatePassword = async function (req, res) {
   let nav = await utilities.getNav()
   const { account_password, account_id } = req.body
-  
+
   // Verify that the user is updating their own account
   if (res.locals.accountData.account_id !== parseInt(account_id)) {
     req.flash("notice", "Access denied. You can only update your own account.")
     return res.redirect("/account/")
   }
-  
+
   try {
     // Hash the new password
     let hashedPassword
@@ -152,10 +152,10 @@ accountController.updatePassword = async function (req, res) {
       req.flash("notice", "Password hashing failed. Please try again.")
       return res.redirect(`/account/update/${account_id}`)
     }
-    
+
     // Update password in database
     const updateResult = await accountModel.updatePassword(hashedPassword, account_id)
-    
+
     if (updateResult && !updateResult.message) {
       req.flash("notice", "Password has been changed successfully.")
     } else {
@@ -164,21 +164,21 @@ accountController.updatePassword = async function (req, res) {
   } catch (error) {
     req.flash("notice", "Sorry, there was an error updating your password.")
   }
-  
+
   res.redirect("/account/")
 }
 
 /* ****************************************
 *  Process login attempt
-* *************************************** */ 
+* *************************************** */
 accountController.accountLogin = async function (req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
-  
+
   try {
     // Get account from database by email
-    const accountData = await accountModel.getAccountByEmailForLogin(account_email)
-    
+    const accountData = await accountModel.getAccountByEmail(account_email)
+
     if (!accountData) {
       req.flash("notice", "Please check your credentials and try again.")
       res.status(400).render("account/login", {
@@ -189,33 +189,18 @@ accountController.accountLogin = async function (req, res) {
       })
       return
     }
-    
+
     // Compare provided password with hashed password from database
     const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
-    
+
     if (passwordMatch) {
-      // Create JWT token with account data (exclude password)
-      const tokenData = {
-        account_id: accountData.account_id,
-        account_firstname: accountData.account_firstname,
-        account_lastname: accountData.account_lastname,
-        account_email: accountData.account_email,
-        account_type: accountData.account_type
-      }
-      
+      delete accountData.account_password
       const accessToken = jwt.sign(
-        tokenData,
+        accountData,
         process.env.ACCESS_TOKEN_SECRET || 'fallback-jwt-secret',
         { expiresIn: 3600 * 1000 }
       )
-      
-      // Set cookie with JWT token
-      if(process.env.NODE_ENV === 'development') {
-        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      } else {
-        res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
-      }
-      
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
       return res.redirect("/account/")
     } else {
       req.flash("notice", "Please check your credentials and try again.")

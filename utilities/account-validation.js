@@ -34,7 +34,7 @@ validate.updateAccountRules = () => {
       .custom(async (account_email, {req}) => {
         // Check if email already exists for a different account
         const existingAccount = await accountModel.getAccountByEmail(account_email)
-        if (existingAccount && existingAccount.account_id != req.body.account_id) {
+        if (existingAccount) {
           throw new Error("Email exists. Please use a different email address.")
         }
       }),
