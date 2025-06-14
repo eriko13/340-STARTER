@@ -1,0 +1,37 @@
+<%- include('../partials/head') %>
+<% if (messages) { %>
+  <div class="messages">
+    <%- messages() %>
+  </div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<div class="account-info">
+  <h2>Welcome <%= locals.accountData.account_firstname %></h2>
+  <p>You are logged into your account management area.</p>
+  
+  <div class="account-details">
+    <h3>Account Information</h3>
+    <p><strong>Name:</strong> <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></p>
+    <p><strong>Email:</strong> <%= locals.accountData.account_email %></p>
+    <p><strong>Account Type:</strong> <%= locals.accountData.account_type %></p>
+  </div>
+  
+  <div class="account-actions">
+    <h3>Account Actions</h3>
+    <ul>
+      <li><a href="/account/update/<%= locals.accountData.account_id %>">Update Account Information</a></li>
+      <li><a href="/account/logout">Logout</a></li>
+    </ul>
+  </div>
+  
+  <% if (locals.accountData.account_type === "Employee" || locals.accountData.account_type === "Admin") { %>
+    <div class="inventory-management">
+      <h3>Inventory Management</h3>
+      <p><a href="/inv/">Access Inventory Management</a></p>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %> 

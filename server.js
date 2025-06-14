@@ -10,15 +10,25 @@ const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const session = require("express-session")
 const flash = require("connect-flash")
+const cookieParser = require("cookie-parser")
+const jwt = require("jsonwebtoken")
 const app = express()
 const static = require("./routes/static")
 const baseRoute = require("./routes/base")
 const inventoryRoute = require("./routes/inventoryRoute")
+const accountRoute = require("./routes/accountRoute")
 const utilities = require("./utilities")
 
 /* ***********************
  * Middleware
  *************************/
+
+// Cookie Parser Middleware
+app.use(cookieParser())
+
+// JWT Token Check Middleware
+app.use(utilities.checkJWTToken)
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret-key',
   resave: false,
@@ -52,6 +62,8 @@ app.use(static)
 app.use(baseRoute)
 // Inventory routes
 app.use("/inv", inventoryRoute)
+// Account routes
+app.use("/account", accountRoute)
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {

@@ -1,0 +1,352 @@
+<%- include('../partials/head') %>
+<% if (messages) { %>
+  <div class="messages">
+    <%- messages() %>
+  </div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<% if (errors) { %>
+  <div id="errors">
+    <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<div class="update-forms-container">
+  <!-- Account Update Form -->
+  <div class="form-section">
+    <form id="accountUpdateForm" action="/account/update-info/" method="post">
+      <fieldset>
+        <legend>Account Update</legend>
+        
+        <div class="form-group">
+          <label for="account_firstname">First Name:</label>
+          <input 
+            type="text" 
+            name="account_firstname" 
+            id="account_firstname" 
+            placeholder="Enter your first name" 
+            required
+            minlength="1"
+            value="<%= locals.account_firstname || '' %>"
+          >
+          <span class="validation-message" id="firstname-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="account_lastname">Last Name:</label>
+          <input 
+            type="text" 
+            name="account_lastname" 
+            id="account_lastname" 
+            placeholder="Enter your last name" 
+            required
+            minlength="1"
+            value="<%= locals.account_lastname || '' %>"
+          >
+          <span class="validation-message" id="lastname-validation"></span>
+        </div>
+        
+        <div class="form-group">
+          <label for="account_email">Email Address:</label>
+          <input 
+            type="email" 
+            name="account_email" 
+            id="account_email" 
+            placeholder="Enter a valid email address" 
+            required
+            value="<%= locals.account_email || '' %>"
+          >
+          <span class="validation-message" id="email-validation"></span>
+        </div>
+        
+        <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+        
+        <div class="form-group">
+          <input type="submit" value="Update Account" class="btn">
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <!-- Change Password Form -->
+  <div class="form-section">
+    <form id="passwordChangeForm" action="/account/update-password/" method="post">
+      <fieldset>
+        <legend>Change Password</legend>
+        
+        <div class="password-info">
+          <p><strong>Password Requirements:</strong></p>
+          <ul>
+            <li>Must be at least 12 characters long</li>
+            <li>Must contain at least one uppercase letter</li>
+            <li>Must contain at least one lowercase letter</li>
+            <li>Must contain at least one number</li>
+            <li>Must contain at least one special character</li>
+          </ul>
+          <p><em>Note: Entering a new password will replace your current password.</em></p>
+        </div>
+        
+        <div class="form-group">
+          <label for="account_password">New Password:</label>
+          <input 
+            type="password" 
+            name="account_password" 
+            id="account_password" 
+            placeholder="Enter your new password" 
+            required
+            minlength="12"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$"
+            title="Password must be at least 12 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+          >
+          <span class="validation-message" id="password-validation"></span>
+        </div>
+        
+        <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+        
+        <div class="form-group">
+          <input type="submit" value="Change Password" class="btn">
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div class="navigation-links">
+  <a href="/account/">Back to Account Management</a>
+</div>
+
+<script>
+  // Client-side validation
+  document.addEventListener('DOMContentLoaded', function() {
+    // Account Update Form Validation
+    const accountForm = document.getElementById('accountUpdateForm');
+    const accountInputs = {
+      firstname: document.getElementById('account_firstname'),
+      lastname: document.getElementById('account_lastname'),
+      email: document.getElementById('account_email')
+    };
+    
+    const accountValidation = {
+      firstname: document.getElementById('firstname-validation'),
+      lastname: document.getElementById('lastname-validation'),
+      email: document.getElementById('email-validation')
+    };
+    
+    function validateAccountField(field, value, validationRules) {
+      const message = accountValidation[field];
+      
+      for (let rule of validationRules) {
+        if (!rule.test(value)) {
+          message.textContent = rule.message;
+          message.className = 'validation-message error';
+          return false;
+        }
+      }
+      
+      message.textContent = 'Valid';
+      message.className = 'validation-message success';
+      return true;
+    }
+    
+    const accountValidationRules = {
+      firstname: [
+        { test: (v) => v.trim() !== '', message: 'First name is required' },
+        { test: (v) => v.length >= 1, message: 'First name must be at least 1 character' }
+      ],
+      lastname: [
+        { test: (v) => v.trim() !== '', message: 'Last name is required' },
+        { test: (v) => v.length >= 1, message: 'Last name must be at least 1 character' }
+      ],
+      email: [
+        { test: (v) => v.trim() !== '', message: 'Email is required' },
+        { test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: 'Please enter a valid email address' }
+      ]
+    };
+    
+    // Add event listeners for account form
+    Object.keys(accountInputs).forEach(field => {
+      accountInputs[field].addEventListener('input', function() {
+        validateAccountField(field, this.value, accountValidationRules[field]);
+      });
+      
+      accountInputs[field].addEventListener('blur', function() {
+        validateAccountField(field, this.value, accountValidationRules[field]);
+      });
+    });
+    
+    accountForm.addEventListener('submit', function(e) {
+      let isValid = true;
+      Object.keys(accountInputs).forEach(field => {
+        if (!validateAccountField(field, accountInputs[field].value, accountValidationRules[field])) {
+          isValid = false;
+        }
+      });
+      
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+    
+    // Password Form Validation
+    const passwordForm = document.getElementById('passwordChangeForm');
+    const passwordInput = document.getElementById('account_password');
+    const passwordValidation = document.getElementById('password-validation');
+    
+    function validatePassword() {
+      const value = passwordInput.value;
+      const rules = [
+        { test: (v) => v.length >= 12, message: 'Password must be at least 12 characters long' },
+        { test: (v) => /[a-z]/.test(v), message: 'Password must contain at least one lowercase letter' },
+        { test: (v) => /[A-Z]/.test(v), message: 'Password must contain at least one uppercase letter' },
+        { test: (v) => /\d/.test(v), message: 'Password must contain at least one number' },
+        { test: (v) => /[@$!%*?&]/.test(v), message: 'Password must contain at least one special character (@$!%*?&)' }
+      ];
+      
+      for (let rule of rules) {
+        if (!rule.test(value)) {
+          passwordValidation.textContent = rule.message;
+          passwordValidation.className = 'validation-message error';
+          return false;
+        }
+      }
+      
+      passwordValidation.textContent = 'Password meets all requirements';
+      passwordValidation.className = 'validation-message success';
+      return true;
+    }
+    
+    passwordInput.addEventListener('input', validatePassword);
+    passwordInput.addEventListener('blur', validatePassword);
+    
+    passwordForm.addEventListener('submit', function(e) {
+      if (!validatePassword()) {
+        e.preventDefault();
+        passwordInput.focus();
+      }
+    });
+  });
+</script>
+
+<style>
+  .update-forms-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .form-section {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .form-group input[type="text"]:focus,
+  .form-group input[type="email"]:focus,
+  .form-group input[type="password"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .validation-message {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .validation-message.error {
+    color: #dc3545;
+  }
+  
+  .validation-message.success {
+    color: #28a745;
+  }
+  
+  .password-info {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .password-info ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .password-info li {
+    margin-bottom: 0.25rem;
+  }
+  
+  fieldset {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  legend {
+    font-weight: bold;
+    padding: 0 0.5rem;
+  }
+  
+  .navigation-links {
+    margin-top: 2rem;
+  }
+  
+  .navigation-links a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .navigation-links a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .update-forms-container {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<%- include('../partials/footer') %> 

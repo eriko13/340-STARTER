@@ -1,0 +1,31 @@
+<%- include('../partials/head') %>
+<% if (messages) { %>
+  <div class="messages">
+    <%- messages() %>
+  </div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<form id="loginForm" action="/account/login" method="post">
+  <label for="account_email">Email:</label>
+  <input type="email" name="account_email" id="account_email" placeholder="Enter a valid email address" required <% if(locals.account_email) { %>value="<%= account_email %>"<% } %>>
+  
+  <label for="account_password">Password:</label>
+  <input type="password" name="account_password" id="account_password" placeholder="Enter your password" required>
+  
+  <input type="submit" value="Login">
+</form>
+
+<p><a href="/account/register">Don't have an account? Sign up here</a></p>
+
+<div class="demo-accounts">
+  <h3>Demo Accounts:</h3>
+  <ul>
+    <li><strong>Admin:</strong> admin@example.com / password (Full access)</li>
+    <li><strong>Employee:</strong> employee@example.com / password (Inventory management access)</li>
+    <li><strong>Client:</strong> client@example.com / password (No inventory access)</li>
+  </ul>
+</div>
+
+<%- include('../partials/footer') %> 

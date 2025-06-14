@@ -1,0 +1,47 @@
+<%- include('../partials/head') %>
+
+<% if (messages) { %>
+  <div class="messages">
+    <%- messages() %>
+  </div>
+<% } %>
+
+<h1><%= title %></h1>
+
+<div class="vehicle-detail">
+  <div class="vehicle-image">
+    <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+  </div>
+  
+  <div class="vehicle-info">
+    <h2><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %></h2>
+    
+    <div class="vehicle-specs">
+      <div class="spec-item">
+        <span class="spec-label">Price:</span>
+        <span class="spec-value">$<%= new Intl.NumberFormat('en-US').format(vehicle.inv_price) %></span>
+      </div>
+      
+      <div class="spec-item">
+        <span class="spec-label">Mileage:</span>
+        <span class="spec-value"><%= new Intl.NumberFormat('en-US').format(vehicle.inv_miles) %> miles</span>
+      </div>
+      
+      <div class="spec-item">
+        <span class="spec-label">Color:</span>
+        <span class="spec-value"><%= vehicle.inv_color %></span>
+      </div>
+    </div>
+    
+    <div class="vehicle-description">
+      <h3>Description</h3>
+      <p><%= vehicle.inv_description %></p>
+    </div>
+  </div>
+</div>
+
+<div class="navigation-links">
+  <a href="/inv/type/<%= vehicle.classification_id %>" class="btn">Back to Listing</a>
+</div>
+
+<%- include('../partials/footer') %> 

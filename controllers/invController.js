@@ -160,4 +160,164 @@ invCont.buildByClassificationId = async function (req, res, next) {
   }
 }
 
+/* ***************************
+ *  Build vehicle detail view (PUBLIC)
+ * ************************** */
+invCont.buildByInventoryId = async function (req, res, next) {
+  const inv_id = req.params.inv_id
+  
+  // Validate inv_id is a valid number
+  if (!inv_id || isNaN(inv_id)) {
+    req.flash("notice", "Invalid vehicle ID.")
+    return res.redirect("/")
+  }
+  
+  try {
+    const data = await invModel.getInventoryById(inv_id)
+    if (data) {
+      let nav = await utilities.getNav()
+      res.render("./inventory/detail", {
+        title: `${data.inv_make} ${data.inv_model}`,
+        nav,
+        vehicle: data,
+      })
+    } else {
+      req.flash("notice", "Sorry, the requested vehicle was not found.")
+      res.redirect("/")
+    }
+  } catch (error) {
+    console.error("Error in buildByInventoryId:", error)
+    req.flash("notice", "Sorry, there was an error loading the vehicle details.")
+    res.redirect("/")
+  }
+}
+
+/* ***************************
+ *  Build edit inventory view (PROTECTED)
+ * ************************** */
+invCont.buildEditInventory = async function (req, res, next) {
+  const inv_id = req.params.inv_id
+  let nav = await utilities.getNav()
+  
+  try {
+    const data = await invModel.getInventoryById(inv_id)
+    if (data) {
+      let classificationList = await utilities.buildClassificationList(data.classification_id)
+      res.render("./inventory/edit-inventory", {
+        title: `Edit ${data.inv_make} ${data.inv_model}`,
+        nav,
+        classificationList,
+        errors: null,
+        inv_id: data.inv_id,
+        inv_make: data.inv_make,
+        inv_model: data.inv_model,
+        inv_year: data.inv_year,
+        inv_description: data.inv_description,
+        inv_image: data.inv_image,
+        inv_thumbnail: data.inv_thumbnail,
+        inv_price: data.inv_price,
+        inv_miles: data.inv_miles,
+        inv_color: data.inv_color,
+        classification_id: data.classification_id
+      })
+    } else {
+      req.flash("notice", "Sorry, the vehicle was not found.")
+      res.redirect("/inv/")
+    }
+  } catch (error) {
+    console.error("Error in buildEditInventory:", error)
+    req.flash("notice", "Sorry, there was an error loading the edit form.")
+    res.redirect("/inv/")
+  }
+}
+
+/* ***************************
+ *  Update inventory item (PROTECTED)
+ * ************************** */
+invCont.updateInventory = async function (req, res) {
+  let nav = await utilities.getNav()
+  const { 
+    inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, 
+    inv_thumbnail, inv_price, inv_miles, inv_color, classification_id 
+  } = req.body
+
+  const updateResult = await invModel.updateInventory(
+    inv_id, inv_make, inv_model, inv_year, inv_description, inv_image, 
+    inv_thumbnail, inv_price, inv_miles, inv_color, classification_id
+  )
+
+  if (updateResult) {
+    req.flash("notice", `The ${inv_year} ${inv_make} ${inv_model} was successfully updated.`)
+    res.redirect("/inv/")
+  } else {
+    let classificationList = await utilities.buildClassificationList(classification_id)
+    req.flash("notice", "Sorry, updating the vehicle failed.")
+    res.status(501).render("inventory/edit-inventory", {
+      title: `Edit ${inv_year} ${inv_make} ${inv_model}`,
+      nav,
+      classificationList,
+      errors: null,
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id
+    })
+  }
+}
+
+/* ***************************
+ *  Build delete inventory confirmation view (PROTECTED)
+ * ************************** */
+invCont.buildDeleteInventory = async function (req, res, next) {
+  const inv_id = req.params.inv_id
+  let nav = await utilities.getNav()
+  
+  try {
+    const data = await invModel.getInventoryById(inv_id)
+    if (data) {
+      res.render("./inventory/delete-confirm", {
+        title: `Delete ${data.inv_make} ${data.inv_model}`,
+        nav,
+        errors: null,
+        inv_id: data.inv_id,
+        inv_make: data.inv_make,
+        inv_model: data.inv_model,
+        inv_year: data.inv_year,
+        inv_price: data.inv_price
+      })
+    } else {
+      req.flash("notice", "Sorry, the vehicle was not found.")
+      res.redirect("/inv/")
+    }
+  } catch (error) {
+    console.error("Error in buildDeleteInventory:", error)
+    req.flash("notice", "Sorry, there was an error loading the delete confirmation.")
+    res.redirect("/inv/")
+  }
+}
+
+/* ***************************
+ *  Delete inventory item (PROTECTED)
+ * ************************** */
+invCont.deleteInventory = async function (req, res) {
+  const { inv_id, inv_make, inv_model, inv_year } = req.body
+
+  const deleteResult = await invModel.deleteInventory(inv_id)
+
+  if (deleteResult) {
+    req.flash("notice", `The ${inv_year} ${inv_make} ${inv_model} was successfully deleted.`)
+    res.redirect("/inv/")
+  } else {
+    req.flash("notice", "Sorry, deleting the vehicle failed.")
+    res.redirect(`/inv/delete/${inv_id}`)
+  }
+}
+
 module.exports = invCont 
