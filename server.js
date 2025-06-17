@@ -31,8 +31,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
-// JWT Token Check Middleware
-app.use(utilities.checkJWTToken)
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -43,6 +41,9 @@ app.use(session({
   saveUninitialized: true,
   name: 'sessionId',
 }))
+
+// JWT Token Check Middleware (must come after session middleware)
+app.use(utilities.checkJWTToken)
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
