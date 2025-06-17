@@ -26,7 +26,7 @@ router.post(
 )
 
 // Route to build account management view (protected)
-router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
+router.get("/", utilities.checkJWTToken, utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
 
 // Route to build update account view (protected)
 router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(accountController.buildUpdateAccount))

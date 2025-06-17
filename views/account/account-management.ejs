@@ -1,15 +1,22 @@
-<%- include('../partials/head') %>
-<% if (messages) { %>
-  <div class="messages">
-    <%- messages() %>
-  </div>
+<% layout('layouts/layout') -%>
+
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <h1>Account Management</h1>
 <% } %>
 
-<h1><%= title %></h1>
+<% if (errors) { %>
+  <ul class="notice">
+  <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+  <% }) %>
+  </ul>
+<% } %>
 
 <div class="account-info">
   <h2>Welcome <%= locals.accountData.account_firstname %></h2>
-  <p>You are logged into your account management area.</p>
+  <p>You're logged in</p>
   
   <div class="account-details">
     <h3>Account Information</h3>
@@ -32,6 +39,4 @@
       <p><a href="/inv/">Access Inventory Management</a></p>
     </div>
   <% } %>
-</div>
-
-<%- include('../partials/footer') %> 
+</div> 
