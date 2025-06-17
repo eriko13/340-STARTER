@@ -5,10 +5,12 @@
 /* ***********************
  * Require Statements
  *************************/
+const bodyParser = require("body-parser")
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const session = require("express-session")
+const pool = require("./config/database")
 const flash = require("connect-flash")
 const cookieParser = require("cookie-parser")
 const jwt = require("jsonwebtoken")
@@ -25,22 +27,26 @@ const utilities = require("./utilities/")
 
 // Cookie Parser Middleware
 app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 
 // JWT Token Check Middleware
 app.use(utilities.checkJWTToken)
-
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret-key',
-  resave: false,
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
   saveUninitialized: true,
   name: 'sessionId',
 }))
 
-// Flash Messages Middleware
-app.use(flash())
-
-// Make flash messages available to all views
-app.use((req, res, next) => {
+// Express Messages Middleware
+app.use(require('connect-flash')())
+app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
 })

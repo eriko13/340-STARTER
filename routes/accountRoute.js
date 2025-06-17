@@ -14,8 +14,6 @@ router.get("/register", utilities.handleErrors(accountController.buildRegister))
 // Route to handle login attempt
 router.post(
   "/login", 
-  accountValidate.loginRules(),
-  accountValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin),
   utilities.checkJWTToken,
 )
