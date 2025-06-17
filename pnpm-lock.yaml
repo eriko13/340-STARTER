@@ -17,6 +17,9 @@ importers:
       connect-flash:
         specifier: ^0.1.1
         version: 0.1.1
+      connect-pg-simple:
+        specifier: ^10.0.0
+        version: 10.0.0
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -137,6 +140,10 @@ packages:
   connect-flash@0.1.1:
     resolution: {integrity: sha512-2rcfELQt/ZMP+SM/pG8PyhJRaLKp+6Hk2IUBNkEit09X+vwn3QsAL3ZbYtxUn7NVPzbMTSLRDhqe0B/eh30RYA==}
     engines: {node: '>= 0.4.0'}
+
+  connect-pg-simple@10.0.0:
+    resolution: {integrity: sha512-pBGVazlqiMrackzCr0eKhn4LO5trJXsOX0nQoey9wCOayh80MYtThCbq8eoLsjpiWgiok/h+1/uti9/2/Una8A==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=22.0.0}
 
   content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
@@ -790,6 +797,12 @@ snapshots:
   concat-map@0.0.1: {}
 
   connect-flash@0.1.1: {}
+
+  connect-pg-simple@10.0.0:
+    dependencies:
+      pg: 8.15.6
+    transitivePeerDependencies:
+      - pg-native
 
   content-disposition@0.5.4:
     dependencies:
