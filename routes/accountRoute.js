@@ -18,8 +18,13 @@ router.post(
   utilities.checkJWTToken,
 )
 
-// Route to handle registration
-router.post('/register', utilities.handleErrors(accountController.registerAccount))
+// Process the registration data
+router.post(
+  "/register",
+  accountValidate.registationRules(),
+  accountValidate.checkRegData,
+  utilities.handleErrors(accountController.registerAccount)
+)
 
 // Route to build account management view (protected)
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
