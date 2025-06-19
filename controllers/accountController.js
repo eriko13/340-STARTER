@@ -183,7 +183,7 @@ accountController.updatePassword = async function (req, res) {
 /* ****************************************
  *  Process login request
  * ************************************ */
-async function accountLogin(req, res) {
+accountController.accountLogin = async function (req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
