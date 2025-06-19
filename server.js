@@ -5,37 +5,24 @@
 /* ***********************
  * Require Statements
  *************************/
-const bodyParser = require("body-parser")
-const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
-const env = require("dotenv").config()
 const session = require("express-session")
-const pool = require("./database")
-const flash = require("connect-flash")
-const cookieParser = require("cookie-parser")
-const jwt = require("jsonwebtoken")
+const pool = require('./database/')
+const express = require("express")
+const expressLayouts = require('express-ejs-layouts')
+const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
-const baseRoute = require("./routes/base")
+const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const utilities = require("./utilities")
 const accountRoute = require("./routes/accountRoute")
-const utilities = require("./utilities/")
+const bodyParser = require("body-parser")
+const errorRoute = require("./routes/errorRoute")
+const cookieParser = require("cookie-parser")
 
 /* ***********************
-* Middleware
-*************************/
-
-
-// Cookie Parser Middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(cookieParser())
-// JWT Token Check Middleware (must come after session middleware)
-app.use(utilities.checkJWTToken)
-
-// Parse URL-encoded form data
-app.use(express.urlencoded({ extended: true }))
-
+ * Middleware
+ * ************************/
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -46,6 +33,11 @@ app.use(session({
   saveUninitialized: true,
   name: 'sessionId',
 }))
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cookieParser())
+app.use(utilities.checkJWTToken)
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -65,11 +57,15 @@ app.set("layout", "./layouts/layout") // not at views root
  * Routes
  *************************/
 app.use(static)
-app.use(baseRoute)
-// Inventory routes
+// Index Route
+app.get('/', utilities.handleErrors(baseController.buildHome))
+// Inventory Route
 app.use("/inv", inventoryRoute)
-// Account routes
-app.use("/account", accountRoute)
+// Account Route
+app.use("/account", accountRoute);
+// Error Route
+app.use("/error", errorRoute);
+
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
@@ -83,9 +79,10 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
   res.render("errors/error", {
     title: err.status || 'Server Error',
-    message: err.message,
+    message,
     nav
   })
 })

@@ -1,56 +1,100 @@
-// Needed Resources 
-const express = require("express")
-const router = new express.Router() 
-const invController = require("../controllers/invController")
-const invValidate = require("../utilities/inv-validation")
-const utilities = require("../utilities/")
+// Needed Resources
+const express = require("express");
+const router = new express.Router();
+const invController = require("../controllers/invController");
+const utilities = require("../utilities");
+const validate = require("../utilities/account-validation");
 
-// Route to build inventory management view (PROTECTED - Employee/Admin only)
-router.get("/", utilities.checkAccountType, invController.buildManagement);
+// Route to build inventory by classification view
+router.get("/type/:classificationId", invController.buildByClassificationId);
 
-// Route to build add classification view (PROTECTED - Employee/Admin only)
-router.get("/add-classification", utilities.checkAccountType, invController.buildAddClassification);
+// New route for Inventory Item Details
+router.get("/detail/:invId", invController.buildByInvId);
 
-// Route to process add classification form (PROTECTED - Employee/Admin only)
-router.post("/add-classification", 
-  utilities.checkAccountType,
-  invValidate.addClassificationRules(),
-  invValidate.checkClassificationData,
+// New route to build Management view
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildManagementView)
+);
+
+// Show the form to add a classification
+router.get(
+  "/add-classification",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildAddClassification)
+);
+
+// Handle form submission
+router.post(
+  "/add-classification",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  validate.classificationRules(),
+  validate.checkClassificationData,
   utilities.handleErrors(invController.addClassification)
 );
 
-// Route to build add inventory view (PROTECTED - Employee/Admin only)
-router.get("/add-inventory", utilities.checkAccountType, invController.buildAddInventory);
+// Show the form
+router.get(
+  "/add-inventory",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildAddInventory)
+);
 
-// Route to process add inventory form (PROTECTED - Employee/Admin only)
-router.post("/add-inventory", 
-  utilities.checkAccountType,
-  invValidate.addInventoryRules(),
-  invValidate.checkInventoryData,
+// Handle the form submission
+router.post(
+  "/add-inventory",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  validate.inventoryRules(),
+  validate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 );
 
-// Route to build edit inventory view (PROTECTED - Employee/Admin only)
-router.get("/edit/:inv_id", utilities.checkAccountType, utilities.handleErrors(invController.buildEditInventory));
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
 
-// Route to process edit inventory form (PROTECTED - Employee/Admin only)
-router.post("/edit/", 
-  utilities.checkAccountType,
-  invValidate.addInventoryRules(),
-  invValidate.checkInventoryData,
+// GET route to present the inventory edit view for a specific item
+router.get(
+  "/edit/:invId",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildEditInventoryView)
+);
+
+// POST route to update an existing inventory item.
+// This route uses newInventoryRules() and checkUpdateData middleware so that
+// the update data meets the same validation requirements as the add process,
+// and in case of errors, redirects back to the edit view.
+router.post(
+  "/edit-inventory",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  validate.newInventoryRules(),
+  validate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
 );
 
-// Route to build delete inventory confirmation view (PROTECTED - Employee/Admin only)
-router.get("/delete/:inv_id", utilities.checkAccountType, utilities.handleErrors(invController.buildDeleteInventory));
+// Get route to display delete confirmation view for a specific inventory item
+router.get(
+  "/delete/:invId",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.buildDeleteConfirmationView)
+);
 
-// Route to process delete inventory (PROTECTED - Employee/Admin only)
-router.post("/delete/", utilities.checkAccountType, utilities.handleErrors(invController.deleteInventory));
+// Post route to handle the actual deletion of an inventory item
+router.post(
+  "/delete/:invId",
+  utilities.checkLogin,
+  utilities.requireEmployeeOrAdmin,
+  utilities.handleErrors(invController.deleteInventoryItem)
+);
 
-// Route to build inventory by classification view (PUBLIC - accessible to all)
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
-
-// Route to build vehicle detail view (PUBLIC - accessible to all)
-router.get("/detail/:inv_id", utilities.handleErrors(invController.buildByInventoryId));
-
-module.exports = router; 
+module.exports = router;

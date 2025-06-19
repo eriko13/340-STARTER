@@ -1,42 +1,19 @@
-<% layout('layouts/layout') -%>
+<h1>Account Management</h1>
 
-<% if (title) { %>
-  <h1><%= title %></h1>
-<% } else { %>
-  <h1>Account Management</h1>
+<% if (notice && notice.length > 0) { %>
+  <div class="info-message"><p><%= notice[0] %></p></div>
 <% } %>
 
-<% if (errors) { %>
-  <ul class="notice">
-  <% errors.array().forEach(error => { %>
-    <li><%= error.msg %></li>
-  <% }) %>
-  </ul>
-<% } %>
-
-<div class="account-info">
-  <h2>Welcome <%= locals.accountData.account_firstname %></h2>
-  <p>You're logged in</p>
+<div class="mnagmt-view_container">
+  <% if (locals.accountData) { %>
+    <h2>Welcome <%= accountData.account_firstname %></h2>
   
-  <div class="account-details">
-    <h3>Account Information</h3>
-    <p><strong>Name:</strong> <%= locals.accountData.account_firstname %> <%= locals.accountData.account_lastname %></p>
-    <p><strong>Email:</strong> <%= locals.accountData.account_email %></p>
-    <p><strong>Account Type:</strong> <%= locals.accountData.account_type %></p>
-  </div>
+    <!-- Update Account Link -->
+    <p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
   
-  <div class="account-actions">
-    <h3>Account Actions</h3>
-    <ul>
-      <li><a href="/account/update/<%= locals.accountData.account_id %>">Update Account Information</a></li>
-      <li><a href="/account/logout">Logout</a></li>
-    </ul>
-  </div>
-  
-  <% if (locals.accountData.account_type === "Employee" || locals.accountData.account_type === "Admin") { %>
-    <div class="inventory-management">
+    <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
       <h3>Inventory Management</h3>
-      <p><a href="/inv/">Access Inventory Management</a></p>
-    </div>
+      <p><a href="/inv">Go to Inventory Management</a></p>
+    <% } %>
   <% } %>
-</div> 
+</div>

@@ -1,55 +1,69 @@
-// Needed Resources 
-const express = require("express")
-const router = new express.Router()
-const accountController = require("../controllers/accountController")
-const accountValidate = require("../utilities/account-validation")
-const utilities = require("../utilities/")
+const regValidate = require("../utilities/account-validation");
+const express = require("express");
+const router = new express.Router();
+const utilities = require("../utilities");
+const accountController = require("../controllers/accountController");
 
-// Route to build login view
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
-
-// Route to build registration view
-router.get("/register", utilities.handleErrors(accountController.buildRegister))
-
-// Route to handle login attempt
-router.post(
-  "/login", 
-  accountValidate.loginRules(),
-  accountValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-)
-
+// Route to render the login page
+router.get("/login", utilities.handleErrors(accountController.buildLogin));
+// Route to render the registration page
+router.get(
+  "/register",
+  utilities.handleErrors(accountController.buildRegister)
+);
 // Process the registration data
 router.post(
   "/register",
-  accountValidate.registrationRules(),
-  accountValidate.checkRegData,
+  regValidate.registrationRules(),
+  regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
+);
+
+// Process the login attempt
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+);
+
+// Default route: /account
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccountManagement)
 )
 
-// Route to build account management view (protected)
-router.get("/", utilities.checkJWTToken, utilities.checkLogin, utilities.handleErrors(accountController.buildAccount))
-
-// Route to build update account view (protected)
-router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(accountController.buildUpdateAccount))
-
-// Route to process account information update (protected)
-router.post("/update-info/",
+// Route to update account info
+router.get(
+  "/update/:accountId",
   utilities.checkLogin,
-  accountValidate.updateAccountRules(),
-  accountValidate.checkUpdateAccountData,
+  utilities.handleErrors(accountController.buildUpdateAccount)
+)
+
+// POST updated account info
+router.post(
+  "/update-info",
+  utilities.checkLogin,
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateAccountData,
   utilities.handleErrors(accountController.updateAccountInfo)
 )
 
-// Route to process password change (protected)
-router.post("/update-password/",
+// POST new password
+router.post(
+  "/update-password",
   utilities.checkLogin,
-  accountValidate.updatePasswordRules(),
-  accountValidate.checkPasswordData,
+  regValidate.updatePasswordRules(),
+  regValidate.checkUpdatePasswordData,
   utilities.handleErrors(accountController.updatePassword)
 )
 
-// Route to handle logout
-router.get("/logout", utilities.handleErrors(accountController.accountLogout))
+// Logout Route
+router.get(
+  "/logout",
+  utilities.handleErrors(accountController.logoutAccount)
+);
 
-module.exports = router 
+
+module.exports = router;
