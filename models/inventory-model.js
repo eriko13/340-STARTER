@@ -26,6 +26,21 @@ async function getInventoryByClassificationId(classification_id) {
 }
 
 /* ***************************
+ *  Get inventory item by ID
+ * ************************** */
+async function getInventoryItemById(invId) {
+  try {
+    const data = await pool.query(
+      `SELECT * FROM public.inventory WHERE inv_id = $1`,
+      [invId]
+    )
+    return data.rows[0]
+  } catch (error) {
+    console.error('getInventoryItemById error', error)
+  }
+}
+
+/* ***************************
  *  Add new classification
  * ************************** */
 async function addClassification(classification_name) {
@@ -99,4 +114,4 @@ async function deleteInventory(inv_id) {
   }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, addClassification, addInventory, getInventoryById, updateInventory, deleteInventory} 
+module.exports = {getClassifications, getInventoryByClassificationId, addClassification, addInventory, getInventoryById, updateInventory, deleteInventory, getInventoryItemById} 
