@@ -3,7 +3,6 @@
 <div class="update-account-container">
   <div class="page-header">
     <h1 class="page-title">
-      <i class="icon-user"></i>
       <%= title %>
     </h1>
     <p class="page-subtitle">Update your account information and manage your password</p>
@@ -34,7 +33,7 @@
     <div class="card">
       <div class="card-body">
         <h2 class="section-title">
-          <i class="icon-info"></i>
+          <div class="icon-info"></div>
           Account Information
         </h2>
         <p class="section-subtitle">Update your personal details</p>
@@ -43,7 +42,6 @@
           <div class="form-row">
             <div class="form-group">
               <label for="account_firstname" class="form-label">
-                <i class="icon-user-circle"></i>
                 First Name
               </label>
               <input 
@@ -61,7 +59,6 @@
             
             <div class="form-group">
               <label for="account_lastname" class="form-label">
-                <i class="icon-user-circle"></i>
                 Last Name
               </label>
               <input 
@@ -80,7 +77,6 @@
           
           <div class="form-group">
             <label for="account_email" class="form-label">
-              <i class="icon-email"></i>
               Email Address
             </label>
             <input 
@@ -98,7 +94,6 @@
           <input type="hidden" name="account_id" value="<%= locals.account_id %>">
           
           <button type="submit" class="btn btn-primary btn-large">
-            <i class="icon-save"></i>
             Update Account
           </button>
         </form>
@@ -109,14 +104,13 @@
     <div class="card">
       <div class="card-body">
         <h2 class="section-title">
-          <i class="icon-lock"></i>
+          <div class="icon-lock"></div>
           Change Password
         </h2>
         <p class="section-subtitle">Enhance your account security</p>
         
         <div class="password-requirements">
           <h4 class="requirements-title">
-            <i class="icon-shield"></i>
             Password Requirements
           </h4>
           <div class="requirements-grid">
@@ -142,7 +136,7 @@
             </div>
           </div>
           <div class="password-note">
-            <i class="icon-info-circle"></i>
+            <div class="icon-info-circle"></div>
             <em>Changing your password will replace your current password immediately.</em>
           </div>
         </div>
@@ -150,7 +144,7 @@
         <form id="passwordChangeForm" action="/account/update-password/" method="post" class="modern-form">
           <div class="form-group">
             <label for="account_password" class="form-label">
-              <i class="icon-key"></i>
+              <div class="icon-key"></div>
               New Password
             </label>
             <div class="password-input-container">
@@ -166,7 +160,7 @@
                 title="Password must meet all requirements above"
               >
               <button type="button" class="password-toggle" id="togglePassword">
-                <i class="icon-eye"></i>
+                <div class="icon-eye"></div>
               </button>
             </div>
             <div class="password-strength-bar">
@@ -179,7 +173,6 @@
           <input type="hidden" name="account_id" value="<%= locals.account_id %>">
           
           <button type="submit" class="btn btn-secondary btn-large">
-            <i class="icon-lock-update"></i>
             Change Password
           </button>
         </form>
@@ -189,7 +182,7 @@
 
   <div class="navigation-section">
     <a href="/account/" class="nav-link">
-      <i class="icon-arrow-left"></i>
+      <div class="icon-arrow-left"></div>
       Back to Account Management
     </a>
   </div>
@@ -204,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
   togglePassword.addEventListener('click', function() {
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
-    this.innerHTML = type === 'password' ? '<i class="icon-eye"></i>' : '<i class="icon-eye-off"></i>';
+    this.innerHTML = type === 'password' ? '<div class="icon-eye"></div>' : '<div class="icon-eye-off"></div>';
   });
 
   // Account Update Form Validation
@@ -363,445 +356,3 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-
-<style>
-/* Modern Update Account Styles */
-.update-account-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.page-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.page-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--dark-color);
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.page-subtitle {
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin: 0;
-}
-
-/* Alert System */
-.alert-container {
-  margin-bottom: 2rem;
-}
-
-.alert {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-  border: 1px solid;
-}
-
-.alert-error {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #b91c1c;
-}
-
-.alert-icon {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.alert-content h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.alert-content ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-/* Cards Grid */
-.forms-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
-}
-
-.card-header {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  padding: 1.5rem;
-}
-
-.card-title {
-  font-size: 1.375rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.card-subtitle {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 0.95rem;
-}
-
-.card-body {
-  padding: 1.5rem;
-}
-
-/* Modern Form Styles */
-.modern-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--dark-color);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.form-input {
-  padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background-color: #fafafa;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--secondary-color);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(76, 168, 224, 0.1);
-}
-
-.form-input.valid {
-  border-color: #10b981;
-  background-color: #f0fdf4;
-}
-
-.form-input.invalid {
-  border-color: #ef4444;
-  background-color: #fef2f2;
-}
-
-/* Password Input */
-.password-input-container {
-  position: relative;
-  display: flex;
-}
-
-.password-input {
-  flex: 1;
-  padding-right: 3rem;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #6b7280;
-  padding: 0.25rem;
-  border-radius: 4px;
-  transition: color 0.2s ease;
-}
-
-.password-toggle:hover {
-  color: var(--primary-color);
-}
-
-/* Password Requirements */
-.password-requirements {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #e2e8f0;
-}
-
-.requirements-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 1rem 0;
-  color: var(--dark-color);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.requirements-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.requirement-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-.requirement-icon {
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 0.75rem;
-  background-color: #fee2e2;
-  color: #dc2626;
-  font-weight: bold;
-}
-
-.requirement-item.met .requirement-icon {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-
-.requirement-item.met .requirement-text {
-  color: #16a34a;
-  font-weight: 500;
-}
-
-.password-note {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
-  padding: 0.75rem;
-  background-color: white;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-/* Password Strength Bar */
-.password-strength-bar {
-  height: 6px;
-  background-color: #e5e7eb;
-  border-radius: 3px;
-  margin: 0.5rem 0 0.25rem 0;
-  overflow: hidden;
-}
-
-.strength-fill {
-  height: 100%;
-  transition: all 0.3s ease;
-  border-radius: 3px;
-}
-
-.strength-fill.weak {
-  background-color: #ef4444;
-}
-
-.strength-fill.good {
-  background-color: #f59e0b;
-}
-
-.strength-fill.strong {
-  background-color: #10b981;
-}
-
-.password-strength-text {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-/* Buttons */
-.btn {
-  padding: 0.875rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  text-decoration: none;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-  color: white;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-secondary {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: linear-gradient(135deg, #4b5563, #374151);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-large {
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-}
-
-/* Validation Messages */
-.validation-message {
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  min-height: 1.25rem;
-}
-
-.validation-message.error {
-  color: #dc2626;
-}
-
-/* Navigation */
-.navigation-section {
-  text-align: center;
-  padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-}
-
-.nav-link:hover {
-  background-color: #f3f4f6;
-  color: var(--accent-color);
-}
-
-/* Icons - Using CSS-only icons for compatibility */
-.icon-user::before { content: "👤"; }
-.icon-info::before { content: "ℹ️"; }
-.icon-user-circle::before { content: "👤"; }
-.icon-email::before { content: "📧"; }
-.icon-save::before { content: "💾"; }
-.icon-lock::before { content: "🔒"; }
-.icon-shield::before { content: "🛡️"; }
-.icon-info-circle::before { content: "ℹ️"; }
-.icon-key::before { content: "🔑"; }
-.icon-lock-update::before { content: "🔐"; }
-.icon-eye::before { content: "👁️"; }
-.icon-eye-off::before { content: "🙈"; }
-.icon-arrow-left::before { content: "←"; }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .update-account-container {
-    padding: 1rem;
-  }
-  
-  .page-title {
-    font-size: 2rem;
-  }
-  
-  .forms-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-  
-  .requirements-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .card-header {
-    padding: 1.25rem;
-  }
-  
-  .card-body {
-    padding: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-title {
-    font-size: 1.75rem;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .card-title {
-    flex-direction: column;
-    gap: 0.25rem;
-    text-align: center;
-  }
-  
-  .btn {
-    padding: 1rem;
-  }
-}
-</style>
