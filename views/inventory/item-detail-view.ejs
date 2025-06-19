@@ -1,8 +1,13 @@
 <%- details %>
 
 <% if (notice && notice.length > 0) { %>
-  <div class="messages">
-    <%- notice[0] %>
+  <div class="alert-container">
+    <div class="alert alert-success">
+      <span class="alert-icon">✅</span>
+      <div class="alert-content">
+        <p><%= notice[0] %></p>
+      </div>
+    </div>
   </div>
 <% } %>
 
