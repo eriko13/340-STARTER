@@ -11,6 +11,17 @@
   </div>
 <% } %>
 
+<% if (error && error.length > 0) { %>  
+  <div class="alert-container">
+    <div class="alert alert-danger">
+      <span class="alert-icon">❌</span>
+      <div class="alert-content">
+        <p><%= error[0] %></p>
+      </div>
+    </div>
+  </div>
+<% } %>
+
 <!-- Contact Sales Form -->
 <div class="contact-sales-container">
   <h2 class="contact-title">Interested in this vehicle?</h2>

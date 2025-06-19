@@ -24,6 +24,7 @@ leadCont.buildLeadsManagement = async function (req, res, next) {
  *  Process lead submission
  * ************************** */
 leadCont.submitLead = async function (req, res, next) {
+  req.flash("notice");
   const { lead_name, lead_email, lead_phone, lead_message, inv_id } = req.body;
   const account_id = res.locals.loggedin ? res.locals.accountData.account_id : null;
 
@@ -38,15 +39,15 @@ leadCont.submitLead = async function (req, res, next) {
     );
 
     if (result.rows) {
+      res.redirect(`/inv/detail/${inv_id}`);
       req.flash("notice", "Thank you for your interest! Our sales team will contact you soon.");
-      res.status(200).json({ success: true, message: "Thank you for your interest! Our sales team will contact you soon." });
     } else {
-      req.flash("notice", "There was an error submitting your inquiry. Please try again.");
-      res.status(400).json({ success: false, message: "There was an error submitting your inquiry. Please try again." });
+      res.redirect(`/inv/detail/${inv_id}`);
+      req.flash("error", "There was an error submitting your inquiry. Please try again.");
     }
   } catch (error) {
-    req.flash("notice", "There was an error submitting your inquiry. Please try again.");
-    res.status(500).json({ success: false, message: "There was an error submitting your inquiry. Please try again." });
+    res.redirect(`/inv/detail/${inv_id}`);
+    req.flash("error", "There was an error submitting your inquiry. Please try again.");
   }
 };
 

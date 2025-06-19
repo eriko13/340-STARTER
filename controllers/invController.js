@@ -43,7 +43,7 @@ invCont.buildByInvId = async function(req, res, next) {
       details,
       nav,
       notice: req.flash("notice"),
-      errors: null
+      error: req.flash("error")
     })
 }
 
@@ -134,7 +134,8 @@ invCont.buildEditInventoryView = async function(req, res, next) {
     classificationList,
     errors: null,
     ...itemData, // 👈 this makes inv_id, inv_make, etc. available directly
-    notice: req.flash("notice")
+    notice: req.flash("notice"),
+    error: req.flash("error")
   });
 };
 

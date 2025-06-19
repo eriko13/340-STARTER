@@ -49,7 +49,7 @@ validate.checkLeadData = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const inv_id = req.body.inv_id;
-    req.flash("notice", "Please correct the errors and try again.");
+    req.flash("error", "Please correct the errors and try again.");
     return res.redirect(`/inv/detail/${inv_id}`);
   }
   next();
