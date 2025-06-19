@@ -1,352 +1,811 @@
 <%- include('../partials/head') %>
-<% if (messages) { %>
-  <div class="messages">
-    <%- messages() %>
-  </div>
-<% } %>
 
-<h1><%= title %></h1>
-
-<% if (errors) { %>
-  <div id="errors">
-    <ul class="notice">
-    <% errors.array().forEach(error => { %>
-      <li><%= error.msg %></li>
-    <% }); %>
-    </ul>
-  </div>
-<% } %>
-
-<div class="update-forms-container">
-  <!-- Account Update Form -->
-  <div class="form-section">
-    <form id="accountUpdateForm" action="/account/update-info/" method="post">
-      <fieldset>
-        <legend>Account Update</legend>
-        
-        <div class="form-group">
-          <label for="account_firstname">First Name:</label>
-          <input 
-            type="text" 
-            name="account_firstname" 
-            id="account_firstname" 
-            placeholder="Enter your first name" 
-            required
-            minlength="1"
-            value="<%= locals.account_firstname || '' %>"
-          >
-          <span class="validation-message" id="firstname-validation"></span>
-        </div>
-        
-        <div class="form-group">
-          <label for="account_lastname">Last Name:</label>
-          <input 
-            type="text" 
-            name="account_lastname" 
-            id="account_lastname" 
-            placeholder="Enter your last name" 
-            required
-            minlength="1"
-            value="<%= locals.account_lastname || '' %>"
-          >
-          <span class="validation-message" id="lastname-validation"></span>
-        </div>
-        
-        <div class="form-group">
-          <label for="account_email">Email Address:</label>
-          <input 
-            type="email" 
-            name="account_email" 
-            id="account_email" 
-            placeholder="Enter a valid email address" 
-            required
-            value="<%= locals.account_email || '' %>"
-          >
-          <span class="validation-message" id="email-validation"></span>
-        </div>
-        
-        <input type="hidden" name="account_id" value="<%= locals.account_id %>">
-        
-        <div class="form-group">
-          <input type="submit" value="Update Account" class="btn">
-        </div>
-      </fieldset>
-    </form>
+<div class="update-account-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="icon-user"></i>
+      <%= title %>
+    </h1>
+    <p class="page-subtitle">Update your account information and manage your password</p>
   </div>
 
-  <!-- Change Password Form -->
-  <div class="form-section">
-    <form id="passwordChangeForm" action="/account/update-password/" method="post">
-      <fieldset>
-        <legend>Change Password</legend>
-        
-        <div class="password-info">
-          <p><strong>Password Requirements:</strong></p>
-          <ul>
-            <li>Must be at least 12 characters long</li>
-            <li>Must contain at least one uppercase letter</li>
-            <li>Must contain at least one lowercase letter</li>
-            <li>Must contain at least one number</li>
-            <li>Must contain at least one special character</li>
-          </ul>
-          <p><em>Note: Entering a new password will replace your current password.</em></p>
-        </div>
-        
-        <div class="form-group">
-          <label for="account_password">New Password:</label>
-          <input 
-            type="password" 
-            name="account_password" 
-            id="account_password" 
-            placeholder="Enter your new password" 
-            required
-            minlength="12"
-            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$"
-            title="Password must be at least 12 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-          >
-          <span class="validation-message" id="password-validation"></span>
-        </div>
-        
-        <input type="hidden" name="account_id" value="<%= locals.account_id %>">
-        
-        <div class="form-group">
-          <input type="submit" value="Change Password" class="btn">
-        </div>
-      </fieldset>
-    </form>
-  </div>
-</div>
+  <% if (messages) { %>
+    <div class="alert-container">
+      <%- messages() %>
+    </div>
+  <% } %>
 
-<div class="navigation-links">
-  <a href="/account/">Back to Account Management</a>
+  <% if (errors) { %>
+    <div class="alert alert-error">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <h4>Please fix the following errors:</h4>
+        <ul>
+        <% errors.array().forEach(error => { %>
+          <li><%= error.msg %></li>
+        <% }); %>
+        </ul>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="forms-grid">
+    <!-- Account Information Card -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="icon-info"></i>
+          Account Information
+        </h2>
+        <p class="card-subtitle">Update your personal details</p>
+      </div>
+      
+      <div class="card-body">
+        <form id="accountUpdateForm" action="/account/update-info/" method="post" class="modern-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="account_firstname" class="form-label">
+                <i class="icon-user-circle"></i>
+                First Name
+              </label>
+              <input 
+                type="text" 
+                name="account_firstname" 
+                id="account_firstname" 
+                class="form-input"
+                placeholder="Enter your first name" 
+                required
+                minlength="1"
+                value="<%= locals.account_firstname || '' %>"
+              >
+              <div class="validation-message" id="firstname-validation"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="account_lastname" class="form-label">
+                <i class="icon-user-circle"></i>
+                Last Name
+              </label>
+              <input 
+                type="text" 
+                name="account_lastname" 
+                id="account_lastname" 
+                class="form-input"
+                placeholder="Enter your last name" 
+                required
+                minlength="1"
+                value="<%= locals.account_lastname || '' %>"
+              >
+              <div class="validation-message" id="lastname-validation"></div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="account_email" class="form-label">
+              <i class="icon-email"></i>
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              name="account_email" 
+              id="account_email" 
+              class="form-input"
+              placeholder="Enter your email address" 
+              required
+              value="<%= locals.account_email || '' %>"
+            >
+            <div class="validation-message" id="email-validation"></div>
+          </div>
+          
+          <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+          
+          <button type="submit" class="btn btn-primary btn-large">
+            <i class="icon-save"></i>
+            Update Account
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Password Change Card -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="icon-lock"></i>
+          Change Password
+        </h2>
+        <p class="card-subtitle">Enhance your account security</p>
+      </div>
+      
+      <div class="card-body">
+        <div class="password-requirements">
+          <h4 class="requirements-title">
+            <i class="icon-shield"></i>
+            Password Requirements
+          </h4>
+          <div class="requirements-grid">
+            <div class="requirement-item" data-rule="length">
+              <span class="requirement-icon">✗</span>
+              <span class="requirement-text">At least 12 characters</span>
+            </div>
+            <div class="requirement-item" data-rule="uppercase">
+              <span class="requirement-icon">✗</span>
+              <span class="requirement-text">One uppercase letter</span>
+            </div>
+            <div class="requirement-item" data-rule="lowercase">
+              <span class="requirement-icon">✗</span>
+              <span class="requirement-text">One lowercase letter</span>
+            </div>
+            <div class="requirement-item" data-rule="number">
+              <span class="requirement-icon">✗</span>
+              <span class="requirement-text">One number</span>
+            </div>
+            <div class="requirement-item" data-rule="special">
+              <span class="requirement-icon">✗</span>
+              <span class="requirement-text">One special character</span>
+            </div>
+          </div>
+          <div class="password-note">
+            <i class="icon-info-circle"></i>
+            <em>Changing your password will replace your current password immediately.</em>
+          </div>
+        </div>
+        
+        <form id="passwordChangeForm" action="/account/update-password/" method="post" class="modern-form">
+          <div class="form-group">
+            <label for="account_password" class="form-label">
+              <i class="icon-key"></i>
+              New Password
+            </label>
+            <div class="password-input-container">
+              <input 
+                type="password" 
+                name="account_password" 
+                id="account_password" 
+                class="form-input password-input"
+                placeholder="Enter your new password" 
+                required
+                minlength="12"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$"
+                title="Password must meet all requirements above"
+              >
+              <button type="button" class="password-toggle" id="togglePassword">
+                <i class="icon-eye"></i>
+              </button>
+            </div>
+            <div class="password-strength-bar">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+            <div class="password-strength-text" id="strengthText">Enter a password</div>
+            <div class="validation-message" id="password-validation"></div>
+          </div>
+          
+          <input type="hidden" name="account_id" value="<%= locals.account_id %>">
+          
+          <button type="submit" class="btn btn-secondary btn-large">
+            <i class="icon-lock-update"></i>
+            Change Password
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation-section">
+    <a href="/account/" class="nav-link">
+      <i class="icon-arrow-left"></i>
+      Back to Account Management
+    </a>
+  </div>
 </div>
 
 <script>
-  // Client-side validation
-  document.addEventListener('DOMContentLoaded', function() {
-    // Account Update Form Validation
-    const accountForm = document.getElementById('accountUpdateForm');
-    const accountInputs = {
-      firstname: document.getElementById('account_firstname'),
-      lastname: document.getElementById('account_lastname'),
-      email: document.getElementById('account_email')
-    };
+document.addEventListener('DOMContentLoaded', function() {
+  // Password toggle functionality
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('account_password');
+  
+  togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    this.innerHTML = type === 'password' ? '<i class="icon-eye"></i>' : '<i class="icon-eye-off"></i>';
+  });
+
+  // Account Update Form Validation
+  const accountForm = document.getElementById('accountUpdateForm');
+  const accountInputs = {
+    firstname: document.getElementById('account_firstname'),
+    lastname: document.getElementById('account_lastname'),
+    email: document.getElementById('account_email')
+  };
+  
+  const accountValidation = {
+    firstname: document.getElementById('firstname-validation'),
+    lastname: document.getElementById('lastname-validation'),
+    email: document.getElementById('email-validation')
+  };
+  
+  function validateAccountField(field, value, validationRules) {
+    const message = accountValidation[field];
+    const input = accountInputs[field];
     
-    const accountValidation = {
-      firstname: document.getElementById('firstname-validation'),
-      lastname: document.getElementById('lastname-validation'),
-      email: document.getElementById('email-validation')
-    };
-    
-    function validateAccountField(field, value, validationRules) {
-      const message = accountValidation[field];
-      
-      for (let rule of validationRules) {
-        if (!rule.test(value)) {
-          message.textContent = rule.message;
-          message.className = 'validation-message error';
-          return false;
-        }
+    for (let rule of validationRules) {
+      if (!rule.test(value)) {
+        message.textContent = rule.message;
+        message.className = 'validation-message error';
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        return false;
       }
-      
-      message.textContent = 'Valid';
-      message.className = 'validation-message success';
-      return true;
     }
     
-    const accountValidationRules = {
-      firstname: [
-        { test: (v) => v.trim() !== '', message: 'First name is required' },
-        { test: (v) => v.length >= 1, message: 'First name must be at least 1 character' }
-      ],
-      lastname: [
-        { test: (v) => v.trim() !== '', message: 'Last name is required' },
-        { test: (v) => v.length >= 1, message: 'Last name must be at least 1 character' }
-      ],
-      email: [
-        { test: (v) => v.trim() !== '', message: 'Email is required' },
-        { test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: 'Please enter a valid email address' }
-      ]
-    };
-    
-    // Add event listeners for account form
-    Object.keys(accountInputs).forEach(field => {
-      accountInputs[field].addEventListener('input', function() {
-        validateAccountField(field, this.value, accountValidationRules[field]);
-      });
-      
-      accountInputs[field].addEventListener('blur', function() {
-        validateAccountField(field, this.value, accountValidationRules[field]);
-      });
+    message.textContent = '';
+    message.className = 'validation-message';
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+    return true;
+  }
+  
+  const accountValidationRules = {
+    firstname: [
+      { test: (v) => v.trim() !== '', message: 'First name is required' },
+      { test: (v) => v.length >= 1, message: 'First name must be at least 1 character' }
+    ],
+    lastname: [
+      { test: (v) => v.trim() !== '', message: 'Last name is required' },
+      { test: (v) => v.length >= 1, message: 'Last name must be at least 1 character' }
+    ],
+    email: [
+      { test: (v) => v.trim() !== '', message: 'Email is required' },
+      { test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: 'Please enter a valid email address' }
+    ]
+  };
+  
+  // Add event listeners for account form
+  Object.keys(accountInputs).forEach(field => {
+    accountInputs[field].addEventListener('input', function() {
+      validateAccountField(field, this.value, accountValidationRules[field]);
     });
     
-    accountForm.addEventListener('submit', function(e) {
-      let isValid = true;
-      Object.keys(accountInputs).forEach(field => {
-        if (!validateAccountField(field, accountInputs[field].value, accountValidationRules[field])) {
-          isValid = false;
-        }
-      });
-      
-      if (!isValid) {
-        e.preventDefault();
-      }
-    });
-    
-    // Password Form Validation
-    const passwordForm = document.getElementById('passwordChangeForm');
-    const passwordInput = document.getElementById('account_password');
-    const passwordValidation = document.getElementById('password-validation');
-    
-    function validatePassword() {
-      const value = passwordInput.value;
-      const rules = [
-        { test: (v) => v.length >= 12, message: 'Password must be at least 12 characters long' },
-        { test: (v) => /[a-z]/.test(v), message: 'Password must contain at least one lowercase letter' },
-        { test: (v) => /[A-Z]/.test(v), message: 'Password must contain at least one uppercase letter' },
-        { test: (v) => /\d/.test(v), message: 'Password must contain at least one number' },
-        { test: (v) => /[@$!%*?&]/.test(v), message: 'Password must contain at least one special character (@$!%*?&)' }
-      ];
-      
-      for (let rule of rules) {
-        if (!rule.test(value)) {
-          passwordValidation.textContent = rule.message;
-          passwordValidation.className = 'validation-message error';
-          return false;
-        }
-      }
-      
-      passwordValidation.textContent = 'Password meets all requirements';
-      passwordValidation.className = 'validation-message success';
-      return true;
-    }
-    
-    passwordInput.addEventListener('input', validatePassword);
-    passwordInput.addEventListener('blur', validatePassword);
-    
-    passwordForm.addEventListener('submit', function(e) {
-      if (!validatePassword()) {
-        e.preventDefault();
-        passwordInput.focus();
-      }
+    accountInputs[field].addEventListener('blur', function() {
+      validateAccountField(field, this.value, accountValidationRules[field]);
     });
   });
+  
+  accountForm.addEventListener('submit', function(e) {
+    let isValid = true;
+    Object.keys(accountInputs).forEach(field => {
+      if (!validateAccountField(field, accountInputs[field].value, accountValidationRules[field])) {
+        isValid = false;
+      }
+    });
+    
+    if (!isValid) {
+      e.preventDefault();
+    }
+  });
+  
+  // Password validation with visual feedback
+  const passwordForm = document.getElementById('passwordChangeForm');
+  const passwordValidation = document.getElementById('password-validation');
+  const strengthFill = document.getElementById('strengthFill');
+  const strengthText = document.getElementById('strengthText');
+  
+  const requirements = {
+    length: { test: (v) => v.length >= 12, element: document.querySelector('[data-rule="length"]') },
+    uppercase: { test: (v) => /[A-Z]/.test(v), element: document.querySelector('[data-rule="uppercase"]') },
+    lowercase: { test: (v) => /[a-z]/.test(v), element: document.querySelector('[data-rule="lowercase"]') },
+    number: { test: (v) => /\d/.test(v), element: document.querySelector('[data-rule="number"]') },
+    special: { test: (v) => /[@$!%*?&]/.test(v), element: document.querySelector('[data-rule="special"]') }
+  };
+  
+  function updatePasswordStrength() {
+    const value = passwordInput.value;
+    let score = 0;
+    
+    Object.keys(requirements).forEach(key => {
+      const req = requirements[key];
+      const met = req.test(value);
+      const icon = req.element.querySelector('.requirement-icon');
+      
+      if (met) {
+        score++;
+        req.element.classList.add('met');
+        icon.textContent = '✓';
+      } else {
+        req.element.classList.remove('met');
+        icon.textContent = '✗';
+      }
+    });
+    
+    // Update strength bar
+    const percentage = (score / 5) * 100;
+    strengthFill.style.width = percentage + '%';
+    
+    // Update strength text and color
+    if (score === 0) {
+      strengthText.textContent = 'Enter a password';
+      strengthFill.className = 'strength-fill';
+    } else if (score < 3) {
+      strengthText.textContent = 'Weak';
+      strengthFill.className = 'strength-fill weak';
+    } else if (score < 5) {
+      strengthText.textContent = 'Good';
+      strengthFill.className = 'strength-fill good';
+    } else {
+      strengthText.textContent = 'Strong';
+      strengthFill.className = 'strength-fill strong';
+    }
+    
+    // Validation message
+    if (score === 5) {
+      passwordValidation.textContent = '';
+      passwordInput.classList.remove('invalid');
+      passwordInput.classList.add('valid');
+      return true;
+    } else if (value.length > 0) {
+      passwordValidation.textContent = 'Password must meet all requirements above';
+      passwordValidation.className = 'validation-message error';
+      passwordInput.classList.add('invalid');
+      passwordInput.classList.remove('valid');
+      return false;
+    } else {
+      passwordValidation.textContent = '';
+      passwordInput.classList.remove('invalid', 'valid');
+      return false;
+    }
+  }
+  
+  passwordInput.addEventListener('input', updatePasswordStrength);
+  passwordInput.addEventListener('blur', updatePasswordStrength);
+  
+  passwordForm.addEventListener('submit', function(e) {
+    if (!updatePasswordStrength()) {
+      e.preventDefault();
+      passwordInput.focus();
+    }
+  });
+});
 </script>
 
 <style>
-  .update-forms-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin: 2rem 0;
+/* Modern Update Account Styles */
+.update-account-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.page-subtitle {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Alert System */
+.alert-container {
+  margin-bottom: 2rem;
+}
+
+.alert {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid;
+}
+
+.alert-error {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.alert-content h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.alert-content ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+/* Cards Grid */
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-subtitle {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Modern Form Styles */
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-input {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(76, 168, 224, 0.1);
+}
+
+.form-input.valid {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.form-input.invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Password Input */
+.password-input-container {
+  position: relative;
+  display: flex;
+}
+
+.password-input {
+  flex: 1;
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: var(--primary-color);
+}
+
+/* Password Requirements */
+.password-requirements {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.requirements-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.requirement-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.requirement-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.requirement-item.met .requirement-icon {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.requirement-item.met .requirement-text {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.password-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Password Strength Bar */
+.password-strength-bar {
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  margin: 0.5rem 0 0.25rem 0;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 3px;
+}
+
+.strength-fill.weak {
+  background-color: #ef4444;
+}
+
+.strength-fill.good {
+  background-color: #f59e0b;
+}
+
+.strength-fill.strong {
+  background-color: #10b981;
+}
+
+.password-strength-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #4b5563, #374151);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* Validation Messages */
+.validation-message {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  min-height: 1.25rem;
+}
+
+.validation-message.error {
+  color: #dc2626;
+}
+
+/* Navigation */
+.navigation-section {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.nav-link:hover {
+  background-color: #f3f4f6;
+  color: var(--accent-color);
+}
+
+/* Icons - Using CSS-only icons for compatibility */
+.icon-user::before { content: "👤"; }
+.icon-info::before { content: "ℹ️"; }
+.icon-user-circle::before { content: "👤"; }
+.icon-email::before { content: "📧"; }
+.icon-save::before { content: "💾"; }
+.icon-lock::before { content: "🔒"; }
+.icon-shield::before { content: "🛡️"; }
+.icon-info-circle::before { content: "ℹ️"; }
+.icon-key::before { content: "🔑"; }
+.icon-lock-update::before { content: "🔐"; }
+.icon-eye::before { content: "👁️"; }
+.icon-eye-off::before { content: "🙈"; }
+.icon-arrow-left::before { content: "←"; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .update-account-container {
+    padding: 1rem;
   }
   
-  .form-section {
-    flex: 1;
-    min-width: 300px;
+  .page-title {
+    font-size: 2rem;
   }
   
-  .form-group {
-    margin-bottom: 1rem;
+  .forms-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+  .form-row {
+    grid-template-columns: 1fr;
   }
   
-  .form-group input[type="text"],
-  .form-group input[type="email"],
-  .form-group input[type="password"] {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+  .requirements-grid {
+    grid-template-columns: 1fr;
   }
   
-  .form-group input[type="text"]:focus,
-  .form-group input[type="email"]:focus,
-  .form-group input[type="password"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  .card-header {
+    padding: 1.25rem;
+  }
+  
+  .card-body {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .card-title {
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: center;
   }
   
   .btn {
-    background-color: #007bff;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .validation-message {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-  }
-  
-  .validation-message.error {
-    color: #dc3545;
-  }
-  
-  .validation-message.success {
-    color: #28a745;
-  }
-  
-  .password-info {
-    background-color: #f8f9fa;
     padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
   }
-  
-  .password-info ul {
-    margin: 0.5rem 0;
-    padding-left: 1.5rem;
-  }
-  
-  .password-info li {
-    margin-bottom: 0.25rem;
-  }
-  
-  fieldset {
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 4px;
-  }
-  
-  legend {
-    font-weight: bold;
-    padding: 0 0.5rem;
-  }
-  
-  .navigation-links {
-    margin-top: 2rem;
-  }
-  
-  .navigation-links a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .navigation-links a:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 768px) {
-    .update-forms-container {
-      flex-direction: column;
-    }
-  }
+}
 </style>
-
-<%- include('../partials/footer') %> 
