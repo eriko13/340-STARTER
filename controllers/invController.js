@@ -9,6 +9,18 @@ const invCont = {}
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await invModel.getInventoryByClassificationId(classification_id)
+  
+  // Check if data exists and has at least one item
+  if (!data || data.length === 0) {
+    let nav = await utilities.getNav()
+    req.flash("notice", "No vehicles found for this classification.")
+    return res.render("./inventory/classification", {
+      title: "No vehicles found",
+      nav,
+      grid: "<p>No vehicles found for this classification.</p>",
+    })
+  }
+  
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
   const className = data[0].classification_name
