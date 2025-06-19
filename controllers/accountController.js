@@ -47,13 +47,20 @@ async function buildAccountManagement(req, res) {
 async function buildUpdateAccount(req, res) {
   const nav = await utilities.getNav();
   const accountId = req.params.accountId;
-  const accountData = res.locals.accountData;
+  let accountData = res.locals.accountData;
+  
+  // If no account data in locals, fetch from database
+  if (!accountData) {
+    accountData = await accountModel.getAccountById(accountId);
+  }
 
   res.render("account/update-account", {
     title: "Update Account",
     nav,
-    accountId,
-    accountData,
+    account_id: accountId,
+    account_firstname: accountData.account_firstname,
+    account_lastname: accountData.account_lastname,
+    account_email: accountData.account_email,
     errors: null,
     notice: req.flash("notice"),
   });
@@ -82,7 +89,7 @@ async function updateAccountInfo(req, res) {
       title: "Update Account",
       nav,
       errors: null,
-      accountId: account_id,
+      account_id: account_id,
       account_firstname,
       account_lastname,
       account_email,
@@ -111,20 +118,28 @@ async function updatePassword(req, res) {
       return res.redirect("/account");
     } else {
       req.flash("notice", "Password update failed.");
+      const accountData = await accountModel.getAccountById(account_id);
       return res.status(501).render("account/update-account", {
         title: "Update Account",
         nav,
-        accountId: account_id,
+        account_id: account_id,
+        account_firstname: accountData.account_firstname,
+        account_lastname: accountData.account_lastname,
+        account_email: accountData.account_email,
         errors: null,
       });
     }
   } catch (error) {
     console.error(error);
     req.flash("notice", "An error occurred while updating password.");
+    const accountData = await accountModel.getAccountById(account_id);
     return res.status(500).render("account/update-account", {
       title: "Update Account",
       nav,
-      accountId: account_id,
+      account_id: account_id,
+      account_firstname: accountData.account_firstname,
+      account_lastname: accountData.account_lastname,
+      account_email: accountData.account_email,
       errors: null,
     });
   }

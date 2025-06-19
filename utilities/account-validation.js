@@ -4,43 +4,6 @@ const { body, validationResult } = require("express-validator")
 
 const validate = {}
 
-/*  **********************************
- *  Account Update Validation Rules
- * ********************************* */
-validate.updateAccountRules = () => {
-  return [
-    // First name is required and must be string
-    body("account_firstname")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("First name is required."),
-
-    // Last name is required
-    body("account_lastname")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Last name is required."),
-
-    // Valid email is required and must be unique if changed
-    body("account_email")
-      .trim()
-      .isEmail()
-      .normalizeEmail()
-      .withMessage("A valid email is required.")
-      .custom(async (account_email, { req }) => {
-        // Check if email already exists for a different account
-        const existingAccount = await accountModel.getAccountByEmail(account_email)
-        if (existingAccount) {
-          throw new Error("Email exists. Please use a different email address.")
-        }
-      }),
-  ]
-}
-
 /* **********************************
  *  Check inventory update data and return errors
  * ********************************* */
@@ -72,11 +35,13 @@ validate.updateAccountRules = () => {
   return [
     body("account_firstname")
       .trim()
+      .escape()
       .notEmpty()
       .withMessage("First name is required."),
 
     body("account_lastname")
       .trim()
+      .escape()
       .notEmpty()
       .withMessage("Last name is required."),
 
@@ -140,28 +105,8 @@ validate.updatePasswordRules = () => {
  * Check password data and return errors or continue to next
  * ***************************** */
 validate.checkUpdatePasswordData = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const nav = await utilities.getNav();
-    res.render("account/update-account", {
-      title: "Update Account",
-      nav,
-      errors,
-      accountId: req.body.account_id,
-    });
-    return;
-  }
-  next();
-};
-
-
-/* ******************************
- * Check password data and return errors or continue to next
- * ***************************** */
-validate.checkPasswordData = async (req, res, next) => {
-  const { account_password, account_id } = req.body
-  let errors = []
-  errors = validationResult(req)
+  const { account_id } = req.body
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
 
@@ -170,7 +115,7 @@ validate.checkPasswordData = async (req, res, next) => {
 
     res.render("account/update-account", {
       errors,
-      title: "Update Account Information",
+      title: "Update Account",
       nav,
       account_firstname: accountData.account_firstname,
       account_lastname: accountData.account_lastname,
