@@ -1,5 +1,11 @@
 <%- details %>
 
+<% if (notice && notice.length > 0) { %>
+  <div class="messages">
+    <%- notice[0] %>
+  </div>
+<% } %>
+
 <!-- Contact Sales Form -->
 <div class="contact-sales-container">
   <h2 class="contact-title">Interested in this vehicle?</h2>
@@ -38,6 +44,19 @@
 </div>
 
 <style>
+.messages {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px 20px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  color: #155724;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
 .contact-sales-container {
   max-width: 600px;
   margin: 40px auto;

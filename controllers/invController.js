@@ -41,7 +41,9 @@ invCont.buildByInvId = async function(req, res, next) {
       title: `${itemData.inv_make} ${itemData.inv_model}`,
       item: itemData,
       details,
-      nav
+      nav,
+      notice: req.flash("notice"),
+      errors: null
     })
 }
 

@@ -39,14 +39,14 @@ leadCont.submitLead = async function (req, res, next) {
 
     if (result.rows) {
       req.flash("notice", "Thank you for your interest! Our sales team will contact you soon.");
-      res.redirect(`/inv/detail/${inv_id}`);
+      res.status(200).json({ success: true, message: "Thank you for your interest! Our sales team will contact you soon." });
     } else {
       req.flash("notice", "There was an error submitting your inquiry. Please try again.");
-      res.redirect(`/inv/detail/${inv_id}`);
+      res.status(400).json({ success: false, message: "There was an error submitting your inquiry. Please try again." });
     }
   } catch (error) {
     req.flash("notice", "There was an error submitting your inquiry. Please try again.");
-    res.redirect(`/inv/detail/${inv_id}`);
+    res.status(500).json({ success: false, message: "There was an error submitting your inquiry. Please try again." });
   }
 };
 

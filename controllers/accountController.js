@@ -257,7 +257,6 @@ async function accountLogin(req, res) {
 
 async function logoutAccount(req, res) {
   res.clearCookie("jwt");
-  req.flash("notice", "You have successfully logged out.");
   return res.redirect("/");
 }
 
