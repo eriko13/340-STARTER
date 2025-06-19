@@ -202,6 +202,8 @@
   border-radius: 4px;
   font-size: 0.85em;
   font-weight: 500;
+  max-lines: 1;
+
 }
 
 .status-new {
@@ -212,6 +214,7 @@
 .status-in-progress {
   background: #d4edda;
   color: #155724;
+  max-lines: 1;
 }
 
 .status-contacted {
@@ -225,28 +228,34 @@
 }
 
 .status-select {
-  padding: 4px 8px;
+  padding: 0;
+  margin: 0;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.85em;
+  font-size: 0.8em;
+  min-width: 80px;
+  max-width: 95px;
 }
 
 .lead-actions {
-  min-width: 280px;
-  width: 280px;
+  min-width: 260px;
+  width: 260px;
   text-align: center;
+  padding: 8px 4px;
 }
 
 .action-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  gap: 8px;
   justify-content: center;
   align-items: center;
+  flex-wrap: nowrap;
 }
 
 .status-form {
   display: inline-block;
+  padding: 0;
+  margin: 0;
 }
 
 .btn {
@@ -261,7 +270,8 @@
 
 .btn-sm {
   padding: 4px 8px;
-  font-size: 0.8em;
+  font-size: 0.75em;
+  min-width: 50px;
 }
 
 .btn-primary {
@@ -324,8 +334,9 @@
   }
   
   .action-buttons {
-    flex-direction: column;
-    gap: 3px;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: wrap;
   }
   
   .btn-sm {
