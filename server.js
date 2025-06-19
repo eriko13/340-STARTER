@@ -22,15 +22,8 @@ const accountRoute = require("./routes/accountRoute")
 const utilities = require("./utilities/")
 
 /* ***********************
- * Middleware
- *************************/
-
-// Cookie Parser Middleware
-app.use(cookieParser())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-
-
+* Middleware
+*************************/
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -42,8 +35,13 @@ app.use(session({
   name: 'sessionId',
 }))
 
+// Cookie Parser Middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cookieParser())
 // JWT Token Check Middleware (must come after session middleware)
 app.use(utilities.checkJWTToken)
+
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -54,6 +52,7 @@ app.use(function(req, res, next){
 
 // Parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }))
+
 
 /* ***********************
  * View Engine and Templates

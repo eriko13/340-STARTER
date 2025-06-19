@@ -5,7 +5,7 @@ const accountModel = {}
 /* *****************************
 *   Register new account
 * *************************** */
-async function registerAccount(account_firstname, account_lastname, account_email, account_password){
+accountModel.registerAccount = async function (account_firstname, account_lastname, account_email, account_password){
   try {
     const sql = "INSERT INTO account (account_firstname, account_lastname, account_email, account_password, account_type) VALUES ($1, $2, $3, $4, 'Client') RETURNING *"
     return await pool.query(sql, [account_firstname, account_lastname, account_email, account_password])
@@ -75,7 +75,5 @@ accountModel.updatePassword = async function (hashedPassword, account_id) {
     return error.message
   }
 }
-
-accountModel.registerAccount = registerAccount
 
 module.exports = accountModel 
