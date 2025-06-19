@@ -16,6 +16,7 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
 const accountRoute = require("./routes/accountRoute")
+const leadRoute = require("./routes/leadRoute")
 const bodyParser = require("body-parser")
 const errorRoute = require("./routes/errorRoute")
 const cookieParser = require("cookie-parser")
@@ -63,6 +64,8 @@ app.get('/', utilities.handleErrors(baseController.buildHome))
 app.use("/inv", inventoryRoute)
 // Account Route
 app.use("/account", accountRoute);
+// Leads Route
+app.use("/leads", leadRoute);
 // Error Route
 app.use("/error", errorRoute);
 

@@ -11,7 +11,16 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
-  const className = data[0].classification_name
+  
+  // Get className - if there are vehicles, get it from data, otherwise get it from classification table
+  let className
+  if (data.length > 0) {
+    className = data[0].classification_name
+  } else {
+    const classificationData = await invModel.getClassificationById(classification_id)
+    className = classificationData ? classificationData.classification_name : "Unknown"
+  }
+  
   res.render("./inventory/classification", {
     title: className + " vehicles",
     nav,

@@ -1,1 +1,169 @@
 <%- details %>
+
+<!-- Contact Sales Form -->
+<div class="contact-sales-container">
+  <h2 class="contact-title">Interested in this vehicle?</h2>
+  <p class="contact-subtitle">Fill out the form below and our sales team will contact you soon!</p>
+  
+  <form action="/leads/submit" method="post" class="contact-form">
+    <input type="hidden" name="inv_id" value="<%= item.inv_id %>">
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="lead_name">Full Name *</label>
+        <input type="text" id="lead_name" name="lead_name" required 
+               value="<% if (locals.accountData) { %><%= accountData.account_firstname %> <%= accountData.account_lastname %><% } %>">
+      </div>
+      
+      <div class="form-group">
+        <label for="lead_email">Email Address *</label>
+        <input type="email" id="lead_email" name="lead_email" required 
+               value="<% if (locals.accountData) { %><%= accountData.account_email %><% } %>">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="lead_phone">Phone Number</label>
+      <input type="tel" id="lead_phone" name="lead_phone" placeholder="(555) 123-4567">
+    </div>
+    
+    <div class="form-group">
+      <label for="lead_message">Message (Optional)</label>
+      <textarea id="lead_message" name="lead_message" rows="4" 
+                placeholder="Tell us about your interest in this vehicle, financing needs, or any questions you have..."></textarea>
+    </div>
+    
+    <button type="submit" class="submit-btn">Send Inquiry</button>
+  </form>
+</div>
+
+<style>
+.contact-sales-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.contact-title {
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.8em;
+}
+
+.contact-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1em;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submit-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #0056b3;
+}
+
+.submit-btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+  .contact-sales-container {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .contact-title {
+    font-size: 1.5em;
+  }
+  
+  .contact-subtitle {
+    font-size: 1em;
+  }
+}
+
+/* Form validation styles */
+.form-group input:invalid {
+  border-color: #dc3545;
+}
+
+.form-group input:valid {
+  border-color: #28a745;
+}
+
+/* Required field indicator */
+.form-group label::after {
+  content: "";
+}
+
+.form-group label[for$="_name"]::after,
+.form-group label[for$="_email"]::after {
+  content: " *";
+  color: #dc3545;
+}
+</style>

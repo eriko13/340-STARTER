@@ -1,0 +1,352 @@
+<div class="lead-detail-container">
+  <div class="page-header">
+    <h1 class="page-title">Lead Details</h1>
+    <a href="/leads" class="btn btn-secondary back-btn">← Back to Leads</a>
+  </div>
+
+  <% if (notice && notice.length > 0) { %>
+    <div class="alert-container">
+      <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div class="alert-content">
+          <p><%= notice[0] %></p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="lead-detail-content">
+    <div class="lead-info-grid">
+      <!-- Customer Information -->
+      <div class="info-card">
+        <h3 class="card-title">Customer Information</h3>
+        <div class="info-item">
+          <label>Name:</label>
+          <span><%= lead.lead_name %></span>
+        </div>
+        <div class="info-item">
+          <label>Email:</label>
+          <span><a href="mailto:<%= lead.lead_email %>"><%= lead.lead_email %></a></span>
+        </div>
+        <% if (lead.lead_phone) { %>
+          <div class="info-item">
+            <label>Phone:</label>
+            <span><a href="tel:<%= lead.lead_phone %>"><%= lead.lead_phone %></a></span>
+          </div>
+        <% } %>
+        <div class="info-item">
+          <label>Customer Type:</label>
+          <span>
+            <% if (lead.account_firstname) { %>
+              <span class="registered-user">Registered User (<%= lead.account_firstname %> <%= lead.account_lastname %>)</span>
+            <% } else { %>
+              <span class="guest-user">Guest User</span>
+            <% } %>
+          </span>
+        </div>
+      </div>
+
+      <!-- Vehicle Information -->
+      <div class="info-card">
+        <h3 class="card-title">Vehicle of Interest</h3>
+        <div class="info-item">
+          <label>Vehicle:</label>
+          <span><%= lead.inv_year %> <%= lead.inv_make %> <%= lead.inv_model %></span>
+        </div>
+        <% if (lead.inv_price) { %>
+          <div class="info-item">
+            <label>Price:</label>
+            <span>$<%= new Intl.NumberFormat('en-US').format(lead.inv_price) %></span>
+          </div>
+        <% } %>
+        <div class="info-item">
+          <label>View Vehicle:</label>
+          <span><a href="/inv/detail/<%= lead.inv_id %>" class="vehicle-link">View Vehicle Details</a></span>
+        </div>
+      </div>
+
+      <!-- Lead Information -->
+      <div class="info-card">
+        <h3 class="card-title">Lead Information</h3>
+        <div class="info-item">
+          <label>Status:</label>
+          <span class="status-badge status-<%= lead.lead_status.toLowerCase().replace(' ', '-') %>">
+            <%= lead.lead_status %>
+          </span>
+        </div>
+        <div class="info-item">
+          <label>Submitted:</label>
+          <span><%= new Date(lead.lead_created_date).toLocaleDateString() %> at <%= new Date(lead.lead_created_date).toLocaleTimeString() %></span>
+        </div>
+        <div class="info-item">
+          <label>Lead ID:</label>
+          <span>#<%= lead.lead_id %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Message -->
+    <% if (lead.lead_message) { %>
+      <div class="message-card">
+        <h3 class="card-title">Customer Message</h3>
+        <div class="message-content">
+          <%= lead.lead_message %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Actions -->
+    <div class="actions-card">
+      <h3 class="card-title">Actions</h3>
+      <div class="action-buttons">
+        <form method="post" action="/leads/update-status" style="display: inline-block;">
+          <input type="hidden" name="lead_id" value="<%= lead.lead_id %>">
+          <label for="status">Update Status:</label>
+          <select name="status" id="status" class="status-select">
+            <option value="New" <%= lead.lead_status === 'New' ? 'selected' : '' %>>New</option>
+            <option value="In Progress" <%= lead.lead_status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+            <option value="Contacted" <%= lead.lead_status === 'Contacted' ? 'selected' : '' %>>Contacted</option>
+            <option value="Closed" <%= lead.lead_status === 'Closed' ? 'selected' : '' %>>Closed</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+        
+        <a href="mailto:<%= lead.lead_email %>?subject=Re: Your Inquiry About <%= lead.inv_year %> <%= lead.inv_make %> <%= lead.inv_model %>" 
+           class="btn btn-success">Send Email</a>
+        
+        <% if (lead.lead_phone) { %>
+          <a href="tel:<%= lead.lead_phone %>" class="btn btn-info">Call Customer</a>
+        <% } %>
+        
+        <a href="/leads/delete/<%= lead.lead_id %>" 
+           class="btn btn-danger" 
+           onclick="return confirm('Are you sure you want to delete this lead?')">Delete Lead</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.lead-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.page-title {
+  color: #333;
+  margin: 0;
+}
+
+.back-btn {
+  background: #6c757d;
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.lead-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lead-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.info-card, .message-card, .actions-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+  border-bottom: 2px solid #f8f9fa;
+  padding-bottom: 10px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.info-item span {
+  text-align: right;
+  flex: 1;
+}
+
+.registered-user {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.guest-user {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.vehicle-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.vehicle-link:hover {
+  text-decoration: underline;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.status-new {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-in-progress {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-contacted {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-closed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.message-content {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.status-select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9em;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.alert-container {
+  margin-bottom: 20px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-icon {
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .action-buttons form {
+    width: 100%;
+  }
+  
+  .status-select {
+    margin: 5px 0;
+  }
+}
+</style> 

@@ -1,0 +1,286 @@
+<div class="leads-management-container">
+  <div class="page-header">
+    <h1 class="page-title">Leads Management</h1>
+    <p class="page-subtitle">Manage customer inquiries and sales leads</p>
+  </div>
+
+  <% if (notice && notice.length > 0) { %>
+    <div class="alert-container">
+      <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div class="alert-content">
+          <p><%= notice[0] %></p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="leads-stats">
+    <div class="stat-card">
+      <h3>Total Leads</h3>
+      <span class="stat-number"><%= leads.length %></span>
+    </div>
+    <div class="stat-card">
+      <h3>New Leads</h3>
+      <span class="stat-number"><%= leads.filter(lead => lead.lead_status === 'New').length %></span>
+    </div>
+    <div class="stat-card">
+      <h3>In Progress</h3>
+      <span class="stat-number"><%= leads.filter(lead => lead.lead_status === 'In Progress').length %></span>
+    </div>
+  </div>
+
+  <div class="leads-table-container">
+    <% if (leads && leads.length > 0) { %>
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% leads.forEach(lead => { %>
+            <tr class="lead-row">
+              <td class="lead-date">
+                <%= new Date(lead.lead_created_date).toLocaleDateString() %>
+              </td>
+              <td class="lead-customer">
+                <div class="customer-info">
+                  <strong><%= lead.lead_name %></strong>
+                  <% if (lead.account_firstname) { %>
+                    <span class="registered-user">(Registered User)</span>
+                  <% } %>
+                </div>
+              </td>
+              <td class="lead-vehicle">
+                <%= lead.inv_year %> <%= lead.inv_make %> <%= lead.inv_model %>
+              </td>
+              <td class="lead-contact">
+                <div class="contact-info">
+                  <div><strong>Email:</strong> <%= lead.lead_email %></div>
+                  <% if (lead.lead_phone) { %>
+                    <div><strong>Phone:</strong> <%= lead.lead_phone %></div>
+                  <% } %>
+                </div>
+              </td>
+              <td class="lead-status">
+                <span class="status-badge status-<%= lead.lead_status.toLowerCase().replace(' ', '-') %>">
+                  <%= lead.lead_status %>
+                </span>
+              </td>
+              <td class="lead-actions">
+                <a href="/leads/detail/<%= lead.lead_id %>" class="btn btn-sm btn-primary">View</a>
+                <form method="post" action="/leads/update-status" style="display: inline;">
+                  <input type="hidden" name="lead_id" value="<%= lead.lead_id %>">
+                  <select name="status" onchange="this.form.submit()" class="status-select">
+                    <option value="New" <%= lead.lead_status === 'New' ? 'selected' : '' %>>New</option>
+                    <option value="In Progress" <%= lead.lead_status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+                    <option value="Contacted" <%= lead.lead_status === 'Contacted' ? 'selected' : '' %>>Contacted</option>
+                    <option value="Closed" <%= lead.lead_status === 'Closed' ? 'selected' : '' %>>Closed</option>
+                  </select>
+                </form>
+                <a href="/leads/delete/<%= lead.lead_id %>" 
+                   class="btn btn-sm btn-danger" 
+                   onclick="return confirm('Are you sure you want to delete this lead?')">Delete</a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="no-leads">
+        <h3>No leads found</h3>
+        <p>No customer inquiries have been submitted yet.</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+.leads-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-title {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  color: #666;
+  font-size: 1.1em;
+}
+
+.leads-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-card h3 {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+.stat-number {
+  font-size: 2em;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.leads-table-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.leads-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leads-table th {
+  background: #f8f9fa;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.leads-table td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.lead-row:hover {
+  background: #f8f9fa;
+}
+
+.customer-info {
+  line-height: 1.4;
+}
+
+.registered-user {
+  color: #28a745;
+  font-size: 0.85em;
+}
+
+.contact-info {
+  line-height: 1.4;
+  font-size: 0.9em;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.status-new {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-in-progress {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-contacted {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-closed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.lead-actions {
+  white-space: nowrap;
+}
+
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85em;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.8em;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.no-leads {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.alert-container {
+  margin-bottom: 20px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-icon {
+  margin-right: 10px;
+}
+</style> 
