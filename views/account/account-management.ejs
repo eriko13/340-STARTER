@@ -1,20 +1,97 @@
-<h1>Account Management</h1>
-
-<% if (notice && notice.length > 0) { %>
-  <div class="info-message"><p><%= notice[0] %></p></div>
-<% } %>
-
-<div class="mnagmt-view_container">
-  <% if (locals.accountData) { %>
-    <h2>Welcome <%= accountData.account_firstname %></h2>
-  
-    <!-- Update Account Link - appears for all account types -->
-    <p><a href="/account/update/<%= accountData.account_id %>">Update Account Information</a></p>
-  
-    <!-- Inventory Management - only for Employee and Admin -->
-    <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
-      <h3>Inventory Management</h3>
-      <p><a href="/inv">Manage Inventory</a></p>
+<div class="account-management-container">
+  <div class="page-header">
+    <h1 class="page-title">
+      Account Management
+    </h1>
+    <% if (locals.accountData) { %>
+      <p class="page-subtitle">Welcome <%= accountData.account_firstname %></p>
     <% } %>
+  </div>
+
+  <% if (notice && notice.length > 0) { %>
+    <div class="alert-container">
+      <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div class="alert-content">
+          <p><%= notice[0] %></p>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <% if (locals.accountData) { %>
+    <div class="management-grid">
+      <!-- Account Information Section -->
+      <div class="management-card">
+        <div class="card-header">
+          <div class="card-icon account-icon">
+            <span>👤</span>
+          </div>
+          <div class="card-title-section">
+            <h2 class="card-title">Account Information</h2>
+            <p class="card-subtitle">Manage your personal details and preferences</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="account-details">
+            <div class="detail-item">
+              <span class="detail-label">Name:</span>
+              <span class="detail-value"><%= accountData.account_firstname %> <%= accountData.account_lastname %></span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Email:</span>
+              <span class="detail-value"><%= accountData.account_email %></span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Type:</span>
+              <span class="detail-value account-type <%= accountData.account_type.toLowerCase() %>">
+                <%= accountData.account_type %>
+              </span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/account/update/<%= accountData.account_id %>" class="btn btn-primary">
+              Update Account Information
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Management Section - only for Employee and Admin -->
+      <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+        <div class="management-card">
+          <div class="card-header">
+            <div class="card-icon inventory-icon">
+              <span>📦</span>
+            </div>
+            <div class="card-title-section">
+              <h2 class="card-title">Inventory Management</h2>
+              <p class="card-subtitle">Manage products, classifications, and inventory</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="feature-list">
+              <div class="feature-item">
+                <span class="feature-icon">📋</span>
+                <span class="feature-text">Add and edit vehicle classifications</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🚗</span>
+                <span class="feature-text">Manage vehicle inventory</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">📊</span>
+                <span class="feature-text">View inventory reports</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              <a href="/inv" class="btn btn-secondary">
+                Manage Inventory
+              </a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
   <% } %>
 </div>

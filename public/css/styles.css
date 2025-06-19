@@ -751,21 +751,9 @@ p a:hover {
   color: white;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 .btn-secondary {
   background: linear-gradient(135deg, #6b7280, #4b5563);
   color: white;
-}
-
-.btn-secondary:hover {
-  background: linear-gradient(135deg, #4b5563, #374151);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-large {
@@ -860,5 +848,288 @@ p a:hover {
   
   .btn {
     padding: 1rem;
+  }
+}
+
+/* Account Management Styles */
+.account-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.account-management-container .page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.account-management-container .page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.account-management-container .page-subtitle {
+  font-size: 1.25rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Alert Styles for Account Management */
+.account-management-container .alert-container {
+  margin-bottom: 2rem;
+}
+
+.alert-success {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+/* Management Grid */
+.management-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Management Cards */
+.management-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+
+
+/* Card Header */
+.card-header {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 168, 224, 0.3);
+}
+
+.card-icon.account-icon {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.card-icon.inventory-icon {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.card-icon.actions-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.card-title-section {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--dark-color);
+}
+
+.card-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Card Body */
+.management-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Account Details */
+.account-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.detail-value {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.account-type {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-type.admin {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.account-type.employee {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.account-type.customer {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+/* Feature List */
+.feature-list {
+  margin-bottom: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.feature-item:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  font-size: 1.25rem;
+  width: 32px;
+  text-align: center;
+}
+
+.feature-text {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* Card Actions */
+.card-actions {
+  margin-top: 1.5rem;
+}
+
+.card-actions .btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Responsive Design for Account Management */
+@media (max-width: 768px) {
+  .account-management-container {
+    padding: 1rem;
+  }
+  
+  .account-management-container .page-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .management-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .card-header {
+    padding: 1.25rem 1.25rem 0 1.25rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .management-card .card-body {
+    padding: 1.25rem;
+  }
+  
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .account-management-container .page-title {
+    font-size: 1.75rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
   }
 }
