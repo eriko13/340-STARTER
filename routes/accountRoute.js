@@ -37,7 +37,7 @@ router.get("/update/:account_id", utilities.checkLogin, utilities.handleErrors(a
 router.post("/update-info/",
   utilities.checkLogin,
   accountValidate.updateAccountRules(),
-  accountValidate.checkUpdateData,
+  accountValidate.checkUpdateAccountData,
   utilities.handleErrors(accountController.updateAccountInfo)
 )
 
